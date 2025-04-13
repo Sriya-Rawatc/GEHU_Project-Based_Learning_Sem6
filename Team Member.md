@@ -1,4 +1,0 @@
-# Pranjal 
-# Prakriti 
-# Sriya 
-
