@@ -1,6 +1,166 @@
-body {
-	background-image: linear-gradient(213.3deg, rgba(252, 225, 208, 1) 30%, rgb(255, 209, 232) 55.7%, rgb(255, 202, 202) 81.8%);
+:root {
+	--background-color: #b91818;
+	--animation-duration: 10s;
+	--background-blend: overlay;
+  }
+  
+  body {
+	margin: 0;
+	padding: 0;
+	min-height: 100vh;
+	font-family: 'Inter', sans-serif;
+	background-color: var(--background-color);
+  }
+  
+  body::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+  
+	background-image:
+	  radial-gradient(circle at 10% 20%, rgba(0, 191, 255, 0.6), transparent 10%),
+	  radial-gradient(circle at 90% 30%, rgba(255, 99, 71, 0.6), transparent 10%),
+	  radial-gradient(circle at 40% 50%, rgba(255, 223, 0, 0.6), transparent 10%),
+	  radial-gradient(circle at 70% 80%, rgba(138, 43, 226, 0.6), transparent 10%),
+	  radial-gradient(circle at 20% 60%, rgba(32, 178, 170, 0.6), transparent 10%),
+	  radial-gradient(circle at 80% 40%, rgba(255, 182, 193, 0.6), transparent 10%),
+	  radial-gradient(circle at 30% 80%, rgba(221, 160, 221, 0.6), transparent 10%),
+	  radial-gradient(circle at 60% 70%, rgba(255, 111, 97, 0.6), transparent 10%);
+  
+	background-blend-mode: var(--background-blend);
+	background-size: 300% 300%;
+	background-position:
+	  0% 0%, 100% 0%, 0% 100%, 100% 100%, 60% 40%, 20% 60%, 90% 30%, 40% 50%;
+  
+	will-change: background-position, background-size, filter, transform;
+  
+	animation:
+	  moveBlobs var(--animation-duration) ease-in-out infinite alternate,
+	  pulseBlobs var(--animation-duration) ease-in-out infinite alternate,
+	  colorShift 3s ease-in-out infinite alternate,
+	  wavePattern 3s ease-in-out infinite,
+	  rippleEffect 1s ease-in-out infinite;
+  }
+  
+  @keyframes moveBlobs {
+	0% {
+	  background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 60% 40%, 20% 60%, 90% 30%, 40% 50%;
+	}
+	100% {
+	  background-position: 100% 100%, 0% 100%, 100% 0%, 0% 0%, 40% 60%, 10% 80%, 70% 20%, 30% 40%;
+	}
+  }
+  
+  @keyframes pulseBlobs {
+	0%, 100% {
+	  background-size: 300% 300%;
+	}
+	50% {
+	  background-size: 340% 340%;
+	}
+  }
+  
+  @keyframes colorShift {
+	0% {
+	  filter: hue-rotate(0deg) brightness(1.0);
+	}
+	50% {
+	  filter: hue-rotate(180deg) brightness(1.15);
+	}
+	100% {
+	  filter: hue-rotate(360deg) brightness(1.0);
+	}
+  }
+  
+  @keyframes wavePattern {
+	0% {
+	  transform: translateX(0) scaleY(1);
+	}
+	25% {
+	  transform: translateX(-1%) scaleY(1.03);
+	}
+	50% {
+	  transform: translateX(-2%) scaleY(1.05);
+	}
+	75% {
+	  transform: translateX(-1%) scaleY(1.03);
+	}
+	100% {
+	  transform: translateX(0) scaleY(1);
+	}
+  }
+  
+  @keyframes rippleEffect {
+	0% {
+	  box-shadow: 0 0 0 0 rgba(30, 144, 255, 0.2),
+				  0 0 0 0 rgba(65, 105, 225, 0.15);
+	}
+	50% {
+	  box-shadow: 0 0 20px 40px rgba(30, 144, 255, 0),
+				  0 0 40px 80px rgba(65, 105, 225, 0);
+	}
+	100% {
+	  box-shadow: 0 0 0 0 rgba(30, 144, 255, 0.2),
+				  0 0 0 0 rgba(65, 105, 225, 0.15);
+	}
+  }
+
+#table {
+	  color: rgb(255, 255, 255);
+	  font-weight: bold;
+	  font-family: Arial, sans-serif;
+  }
+
+  #table th {
+	  color: white;
+  }
+
+  #table td {
+	  color: rgb(255, 255, 255);
+  }
+
+  #table thead {
+	background-color: #333;
 }
+#table tbody tr:nth-child(even) {
+	background-color: #222;
+}
+#table tbody tr:nth-child(odd) {
+	background-color: #111;
+}
+
+#table, #table th, #table td {
+	border: 1px solid #555;
+	border-collapse: collapse;
+	padding: 8px;
+}
+
+
+#result_table {
+	color: white;
+}
+
+#result_table th, #result_table td {
+	color: white;
+}
+#result_table thead {
+	background-color: #333;
+}
+#result_table tbody tr:nth-child(even) {
+	background-color: #222;
+}
+#result_table tbody tr:nth-child(odd) {
+	background-color: #111;
+}
+
+#result_table, #result_table th, #result_table td {
+	border: 1px solid #555;
+	border-collapse: collapse;
+	padding: 8px;
+}
+
 
 .card {
 	background: transparent !important;
@@ -81,20 +241,10 @@ body {
 	width: 120px;
 }
 
-/* .completedqueue
-{
-	background: url('../images/checked.png') no-repeat;
-	background-size: contain;
-	margin: 20px 0 20px 0px;
-	height: 100px;
-	width: 100px;
-} */
 .fitem {
 	display: flex;
-	/* border: 2px solid #73AD21; */
 	width: 120px;
 	height: 120px;
-	/* margin: 20px; */
 	justify-content: center;
 	align-items: center;
 }
@@ -116,7 +266,6 @@ body {
 	border-style: solid;
 	background-color: #e6e7e8;
 	display: block;
-	/*border-radius:3px 0 0 0;*/
 	border-color: transparent #fff transparent #fff;
 }
 

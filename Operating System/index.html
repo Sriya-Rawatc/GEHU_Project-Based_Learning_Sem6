@@ -17,6 +17,7 @@
   <script defer src="js/algorithm.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous">
   </script>
@@ -42,7 +43,951 @@
 </head>
 
 <body>
-  
+  <section>
+    <style>
+      :root {
+      --primary: #4a4fef;
+      --secondary: #30cfd0;
+      --accent: #6b73ff;
+      --dark: #121212;
+      --light: #f8f9fa;
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      
+      * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      }
+      
+      body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--dark);
+      color: var(--light);
+      line-height: 1.6;
+      }
+      
+      .team-section {
+      position: relative;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      overflow: hidden;
+      }
+      
+      .bg-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(circle at 10% 20%, rgba(74, 79, 239, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 30%, rgba(48, 207, 208, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 30% 70%, rgba(107, 115, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 70% 90%, rgba(74, 79, 239, 0.1) 0%, transparent 20%);
+      z-index: -1;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      }
+      
+      .header {
+      position: relative;
+      margin-bottom: 4rem;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideUp 1s ease forwards 0.2s;
+      }
+      
+      .header h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 1px;
+      }
+      
+      .header .subtitle {
+      font-size: 1.2rem;
+      color: #aab;
+      max-width: 800px;
+      margin: 0 auto;
+      }
+      
+      .divider {
+      width: 120px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      margin: 2rem auto;
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+      }
+      
+      .divider::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.3);
+      animation: shimmer 3s infinite;
+      }
+      
+      .project-info {
+      margin-bottom: 5rem;
+      position: relative;
+      padding: 2rem;
+      border-radius: 12px;
+      background: rgba(18, 18, 24, 0.8);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideUp 1s ease forwards 0.4s;
+      }
+      
+      .project-info h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: var(--secondary);
+      }
+      
+      .project-info p {
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+      }
+      
+      .project-stats {
+      display: flex;
+      justify-content: space-between;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+      }
+      
+      .stat-card {
+      flex-basis: 23%;
+      min-width: 220px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: center;
+      transition: var(--transition);
+      }
+      
+      .stat-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+      
+      .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      }
+      
+      .stat-label {
+      font-size: 1rem;
+      color: #aab;
+      }
+      
+      .team-container {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+      }
+      
+      .team-member {
+      flex: 1;
+      min-width: 300px;
+      max-width: 400px;
+      padding: 2rem;
+      border-radius: 12px;
+      background: rgba(18, 18, 24, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      transform: translateY(30px);
+      opacity: 0;
+      animation: slideUp 1s ease forwards;
+      transition: var(--transition);
+      }
+      
+      .team-member:nth-child(1) {
+      animation-delay: 0.6s;
+      }
+      
+      .team-member:nth-child(2) {
+      animation-delay: 0.8s;
+      }
+      
+      .team-member:nth-child(3) {
+      animation-delay: 1s;
+      }
+      
+      .team-member:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      .profile-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      }
+      
+      .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+      margin-right: 1.5rem;
+      }
+      
+      .profile-title h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.3rem;
+      }
+      
+      .profile-title .role {
+      color: var(--secondary);
+      font-size: 1rem;
+      }
+      
+      .profile-bio {
+      margin-bottom: 1.5rem;
+      color: #ccd;
+      line-height: 1.7;
+      }
+      
+      .profile-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      }
+      
+      .skill-tag {
+      padding: 0.3rem 0.8rem;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      font-size: 0.8rem;
+      transition: var(--transition);
+      }
+      
+      .skill-tag:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+      }
+      
+      .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      }
+      
+      .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--light);
+      text-decoration: none;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      }
+      
+      .social-link:hover {
+      background: var(--primary);
+      transform: translateY(-5px);
+      }
+      
+      .social-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(0);
+      transition: 0.5s;
+      border-radius: 50%;
+      }
+      
+      .social-link:hover::before {
+      transform: scale(2);
+      opacity: 0;
+      }
+      
+      .contribution-bar {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      margin: 1.5rem 0;
+      overflow: hidden;
+      position: relative;
+      }
+      
+      .contribution-progress {
+      height: 100%;
+      border-radius: 4px;
+      width: 0;
+      transition: width 1.5s ease;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      }
+      
+      .quote {
+      font-style: italic;
+      color: #aab;
+      margin-top: 1rem;
+      position: relative;
+      padding-left: 1rem;
+      border-left: 3px solid var(--secondary);
+      }
+      
+      .tech-stack {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 3rem 0;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideUp 1s ease forwards 1.2s;
+      }
+      
+      .tech-item {
+      padding: 0.8rem 1.5rem;
+      margin: 0.5rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: var(--transition);
+      }
+      
+      .tech-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-5px) scale(1.05);
+      }
+      
+      .timeline {
+      margin: 4rem 0;
+      position: relative;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideUp 1s ease forwards 1.4s;
+      }
+      
+      .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      }
+      
+      .timeline-item {
+      position: relative;
+      margin-bottom: 3rem;
+      width: 50%;
+      padding: 0 2rem;
+      }
+      
+      .timeline-item:nth-child(odd) {
+      left: 0;
+      text-align: right;
+      }
+      
+      .timeline-item:nth-child(even) {
+      left: 50%;
+      }
+      
+      .timeline-item::before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--secondary);
+      top: 0;
+      }
+      
+      .timeline-item:nth-child(odd)::before {
+      right: -8px;
+      }
+      
+      .timeline-item:nth-child(even)::before {
+      left: -8px;
+      }
+      
+      .timeline-date {
+      color: var(--secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      }
+      
+      .timeline-content {
+      padding: 1.5rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      
+      .timeline-content h3 {
+      margin-bottom: 0.5rem;
+      color: var(--light);
+      }
+      
+      .contact-section {
+      margin-top: 4rem;
+      text-align: center;
+      padding: 2rem;
+      border-radius: 12px;
+      background: rgba(18, 18, 24, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideUp 1s ease forwards 1.6s;
+      }
+      
+      .contact-section h2 {
+      margin-bottom: 1.5rem;
+      color: var(--secondary);
+      }
+      
+      .contact-cta {
+      display: inline-block;
+      padding: 1rem 2rem;
+      border-radius: 30px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 1rem;
+      }
+      
+      .contact-cta:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+      
+      .floating-shapes {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      overflow: hidden;
+      }
+      
+      .shape {
+      position: absolute;
+      opacity: 0.1;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: float 15s infinite ease-in-out;
+      }
+      
+      .shape:nth-child(1) {
+      width: 120px;
+      height: 120px;
+      top: 10%;
+      left: 5%;
+      animation-delay: 0s;
+      }
+      
+      .shape:nth-child(2) {
+      width: 80px;
+      height: 80px;
+      top: 20%;
+      right: 10%;
+      background: var(--secondary);
+      animation-delay: 2s;
+      }
+      
+      .shape:nth-child(3) {
+      width: 60px;
+      height: 60px;
+      bottom: 15%;
+      left: 15%;
+      background: var(--accent);
+      animation-delay: 4s;
+      }
+      
+      .shape:nth-child(4) {
+      width: 150px;
+      height: 150px;
+      bottom: 10%;
+      right: 5%;
+      animation-delay: 6s;
+      }
+      
+      @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(10deg);
+      }
+      }
+      
+      @keyframes shimmer {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 100%;
+      }
+      }
+      
+      @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+      }
+      
+      @keyframes slideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      }
+      
+      @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      }
+      
+      @media (max-width: 992px) {
+      .team-container {
+        justify-content: center;
+      }
+      
+      .team-member {
+        max-width: 100%;
+      }
+      
+      .timeline::before {
+        left: 30px;
+      }
+      
+      .timeline-item {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 0;
+        left: 0 !important;
+        text-align: left !important;
+      }
+      
+      .timeline-item::before {
+        left: 22px !important;
+        right: auto !important;
+      }
+      }
+      
+      @media (max-width: 768px) {
+      .stat-card {
+        flex-basis: 45%;
+      }
+      }
+      
+      @media (max-width: 576px) {
+      .header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .stat-card {
+        flex-basis: 100%;
+      }
+      }
+    </style>
+  <section class="team-section">
+    <div class="bg-pattern"></div>
+    <div class="floating-shapes">
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    </div>
+    
+    <header class="header">
+    <h1>Meet Our Team</h1>
+    <p class="subtitle">A passionate group of experts committed to crafting exceptional digital experiences with cutting-edge technology and innovative solutions.</p>
+    <div class="divider"></div>
+    </header>
+    
+    <div class="project-info">
+    <h2>About Our Project</h2>
+    <p>This project represents our collective vision to revolutionize user experiences through seamless integration of innovative design and powerful functionality. Built with the latest technologies and architectural patterns, our solution addresses complex challenges while maintaining scalability and performance.</p>
+    
+    <p>With a focus on user-centered design, we've created an intuitive interface that simplifies complex operations without sacrificing capability. Our development approach emphasized collaboration, iterative improvement, and thorough testing to ensure a robust final product.</p>
+    
+    <div class="project-stats">
+      <div class="stat-card">
+      <div class="stat-number">1200+</div>
+      <div class="stat-label">Hours Invested</div>
+      </div>
+      <div class="stat-card">
+      <div class="stat-number">15+</div>
+      <div class="stat-label">Technologies Used</div>
+      </div>
+      <div class="stat-card">
+      <div class="stat-number">98%</div>
+      <div class="stat-label">User Satisfaction</div>
+      </div>
+      <div class="stat-card">
+      <div class="stat-number">120K</div>
+      <div class="stat-label">Lines of Code</div>
+      </div>
+    </div>
+    </div>
+    
+    <div class="tech-stack">
+    <div class="tech-item">HTML</div>
+    <div class="tech-item">CSS</div>
+    <div class="tech-item">JavaScript</div>
+    <div class="tech-item">Github Actions</div>
+    </div>
+    
+    <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-date">January 2023</div>
+      <div class="timeline-content">
+      <h3>Project Inception</h3>
+      <p>Initial concept development and research phase completed.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">March 2023</div>
+      <div class="timeline-content">
+      <h3>Architecture Design</h3>
+      <p>Finalized the architecture patterns and technology stack.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">May 2023</div>
+      <div class="timeline-content">
+      <h3>MVP Development</h3>
+      <p>First working prototype with core functionality.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">October 2023</div>
+      <div class="timeline-content">
+      <h3>Beta Release</h3>
+      <p>Launched beta version for early user feedback.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">January 2024</div>
+      <div class="timeline-content">
+      <h3>Full Launch</h3>
+      <p>Release with comprehensive feature set.</p>
+      </div>
+    </div>
+    </div>
+    
+    <h2 style="text-align: center; margin: 4rem 0 2rem; color: var(--secondary); opacity: 0; transform: translateY(30px); animation: slideUp 1s ease forwards 1.2s;">The Creators</h2>
+    
+    <div class="team-container">
+    <div class="team-member">
+      <div class="profile-header">
+      <div class="profile-avatar">PS</div>
+      <div class="profile-title">
+        <h3>Pranjal Sailwal</h3>
+        <div class="role">Lead Developer</div>
+      </div>
+      </div>
+      
+      <div class="profile-bio">
+      With over xx years of experience in software architecture and development, Pranjal has led numerous enterprise-scale projects. His expertise spans cloud infrastructure, distributed systems, and performance optimization.
+      </div>
+      
+      <div class="contribution-bar">
+      <div class="contribution-progress" style="width: 60%;" data-width="60%"></div>
+      </div>
+      
+      <div class="profile-skills">
+      <div class="skill-tag">Backend Architecture</div>
+      <div class="skill-tag">Distributed Systems</div>
+      <div class="skill-tag">Cloud Infrastructure</div>
+      <div class="skill-tag">System Design</div>
+      </div>
+      
+      <div class="quote">
+      "Great software architecture is invisible to users but fundamental to success."
+      </div>
+      
+      <div class="social-links">
+      <a href="#" class="social-link github-link" title="GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+      </a>
+      <a href="#" class="social-link linkedin-link" title="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
+        </svg>
+      </a>
+      <a href="#" class="social-link email-link" title="Email">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+        </svg>
+      </a>
+      </div>
+    </div>
+    
+    <div class="team-member">
+      <div class="profile-header">
+      <div class="profile-avatar">PK</div>
+      <div class="profile-title">
+        <h3>Prakriti Kimothi</h3>
+        <div class="role">UI/UX Designer</div>
+      </div>
+      </div>
+      
+      <div class="profile-bio">
+      Prakriti is a visionary UX architect with profound knowledge of interaction design principles. Her approach blends aesthetic elegance with practical usability, creating interfaces that delight users while optimizing conversion paths.
+      </div>
+      
+      <div class="contribution-bar">
+      <div class="contribution-progress" style="width: 35%;" data-width="35%"></div>
+      </div>
+      
+      <div class="profile-skills">
+      <div class="skill-tag">UI Design</div>
+      <div class="skill-tag">UX Research</div>
+      <div class="skill-tag">Prototyping</div>
+      <div class="skill-tag">Animation</div>
+      </div>
+      
+      <div class="quote">
+      "Design is not just what it looks like and feels like. Design is how it works."
+      </div>
+      
+      <div class="social-links">
+        <a href="#" class="social-link github-link" title="GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+          </svg>
+        </a>
+        <a href="#" class="social-link linkedin-link" title="LinkedIn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
+          </svg>
+        </a>
+        <a href="#" class="social-link email-link" title="Email">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+          </svg>
+        </a>
+        </div>
+    </div>
+    
+    <div class="team-member">
+      <div class="profile-header">
+      <div class="profile-avatar">SR</div>
+      <div class="profile-title">
+        <h3>Sriya Rawat</h3>
+        <div class="role">Full-Stack Engineer</div>
+      </div>
+      </div>
+      
+      <div class="profile-bio">
+      Sriya specializes in creating high-performance web applications with modern JavaScript frameworks. Her deep understanding of both frontend and backend technologies enables her to build cohesive, end-to-end solutions.
+      </div>
+      
+      <div class="contribution-bar">
+      <div class="contribution-progress" style="width: 35%;" data-width="35%"></div>
+      </div>
+      
+      <div class="profile-skills">
+      <div class="skill-tag">Frontend Development</div>
+      <div class="skill-tag">API Design</div>
+      <div class="skill-tag">Performance Optimization</div>
+      <div class="skill-tag">DevOps</div>
+      </div>
+      
+      <div class="quote">
+      "Code is like humor. When you have to explain it, it's bad."
+      </div>
+      
+      <div class="social-links">
+      <a href="#" class="social-link github-link" title="GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+      </a>
+      <a href="#" class="social-link linkedin-link" title="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
+        </svg>
+      </a>
+      <a href="#" class="social-link email-link" title="Email">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+        </svg>
+      </a>
+      </div>
+    </div>
+    </div>
+    
+    <div class="contact-section">
+    <h2>Want to Collaborate?</h2>
+    <p>We're always open to discussing new projects and partnerships. Reach out to start a conversation!</p>
+    <a href="#" class="contact-cta">Get In Touch</a>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Animate contribution bars
+    setTimeout(() => {
+      document.querySelectorAll('.contribution-progress').forEach(item => {
+      const width = item.getAttribute('data-width');
+      item.style.width = width;
+      });
+    }, 1000);
+    
+    // Add hover effect for team members
+    document.querySelectorAll('.team-member').forEach(member => {
+      member.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-10px)';
+      this.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.2)';
+      this.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+      });
+      
+      member.addEventListener('mouseleave', function() {
+      this.style.transform = '';
+      this.style.boxShadow = '';
+      this.style.borderColor = '';
+      });
+    });
+    
+    // Smooth scroll for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        window.scrollTo({
+        top: target.offsetTop,
+        behavior: 'smooth'
+        });
+      }
+      });
+    });
+    
+    // Add parallax effect to floating shapes
+    window.addEventListener('scroll', function() {
+      const scrollPosition = window.pageYOffset;
+      document.querySelectorAll('.shape').forEach((shape, index) => {
+      const speed = 0.05 * (index + 1);
+      shape.style.transform = `translateY(${scrollPosition * speed}px)`;
+      });
+    });
+    
+    // Intersection Observer for additional animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate');
+        observer.unobserve(entry.target);
+      }
+      });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.team-member, .project-info, .tech-stack, .timeline, .contact-section').forEach(item => {
+      observer.observe(item);
+    });
+    
+    // Add typing effect to header subtitle
+    const subtitle = document.querySelector('.subtitle');
+    const originalText = subtitle.textContent;
+    subtitle.textContent = '';
+    
+    let charIndex = 0;
+    function typeEffect() {
+      if (charIndex < originalText.length) {
+      subtitle.textContent += originalText.charAt(charIndex);
+      charIndex++;
+      setTimeout(typeEffect, 30);
+      }
+    }
+    
+    setTimeout(typeEffect, 1000);
+    
+    // Add hover effect for tech stack items
+    document.querySelectorAll('.tech-item').forEach(item => {
+      item.addEventListener('mouseenter', function() {
+      this.style.background = 'rgba(255, 255, 255, 0.1)';
+      this.style.transform = 'translateY(-5px) scale(1.05)';
+      });
+      
+      item.addEventListener('mouseleave', function() {
+      this.style.background = '';
+      this.style.transform = '';
+      });
+    });
+    
+    // Add glow effect on hover for social links
+    document.querySelectorAll('.social-link').forEach(link => {
+      link.addEventListener('mouseenter', function() {
+      this.style.boxShadow = '0 0 15px rgba(74, 79, 239, 0.5)';
+      });
+      
+      link.addEventListener('mouseleave', function() {
+      this.style.boxShadow = '';
+      });
+    });
+    });
+  </script>
+  </section>
+
+
+
+
   <div class="logo">
     <a href="https://github.com/sailwalpranjal/GEHU_Project-Based_Learning_Sem6/tree/main/Operating%20System" target='_blank' rel='noopener noreferrer'><img
         src="https://img.icons8.com/nolan/50/github.png" alt="Github" /></a>
@@ -218,7 +1163,7 @@
           P1
         </div>
         <div class="p-0 m-auto display-6">
-          <h4>Time: <span id="vis_time" class="bg-warning"></span></h4>
+          <h4>Time: <span id="vis_time" class="bg-1" style="background-color: rgba(177, 177, 17, 0.723);"></span></h4>
           <a class="btn btn-outline-danger" href="javascript:void(0)" id="vis_stop">STOP!</a>
         </div>
       </div>
