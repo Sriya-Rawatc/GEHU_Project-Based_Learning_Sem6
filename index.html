@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pranjal Sailwal - Project Portfolio</title>
+    <style>
+        ::selection {
+        background-color: #ff0033;
+        color: #2538b9;            
+        text-shadow: 0 0 2px #ff6f61, 0 0 5px #ff0033;
+        }
+
+
+        * {
+            margin: -0.7% -0.7%;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+
+            overflow: hidden;
+            background: #000;
+            color: #fff;
+        }
+
+        canvas {
+            position: fixed;
+            top: 1;
+            left: 1;
+            z-index: -1;
+        }
+
+        #content {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+            pointer-events: auto;
+            position: relative;
+            left: 30px;
+            top: 30px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff7b00;
+            text-shadow: 0 0 10px rgba(255, 123, 0, 0.5);
+            position: relative;
+            top: 350px;
+            left: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+            transition: all 0.3s;
+        }
+
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #ff7b00;
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover:after {
+            width: 100%;
+        }
+
+        .nav-link.active:after {
+            width: 100%;
+        }
+
+        .profile {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-image-container {
+            width: 200px;
+            height: 200px;
+            position: relative;
+        }
+
+        .profile-details {
+            flex: 1;
+        }
+
+        .hello-badge {
+            display: inline-block;
+            background: #ff7b00;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .info-grid .label {
+            font-weight: 600;
+        }
+
+        .info-grid .value {
+            color: #ddd;
+        }
+
+        .download-btn {
+            background: #ff7b00;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            margin-right: 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 123, 0, 0.3);
+        }
+
+        .about-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .about-section h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .about-section p {
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            justify-content: center;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px);
+            background: #ff7b00;
+        }
+
+        .social-link i {
+            font-size: 20px;
+            color: white;
+        }
+
+        #keyboard-instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            color: #ddd;
+            text-align: center;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-out;
+        }
+
+        .loading-bar-container {
+            width: 300px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background: #ff7b00;
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <canvas id="bg"></canvas>
+
+    <div id="content">
+        <div class="container" id="main-container">
+            <nav>
+                <div class="logo">Pranjal Sailwal</div>
+                <div class="nav-links">
+                    <a href="#" class="nav-link active">Home</a>
+                    <a href="https://raw.githubusercontent.com/sailwalpranjal/pranjalsailwal/main/public/others/resume.pdf" class="nav-link" target="_blank">Resume</a>
+                    <a href="https://pranjalsailwal.vercel.app/" class="nav-link">Portfolio</a>
+                    <a href="#" class="nav-link">Fun Zone</a>
+                    <a href="mailto:pranjalsailwal09@gmail.com" class="nav-link">Contact</a>
+                </div>
+            </nav>
+
+            <div class="profile">
+                <div class="profile-image-container" id="avatar-container">
+                    <!-- 3D Model will be rendered here -->
+                </div>
+                <div class="profile-details">
+                    <div class="hello-badge">HELLO</div>
+                    <h1>I'm Pranjal Sailwal</h1>
+                    <h2>Software Developer</h2>
+
+                    <div class="info-grid">
+                        <div class="label">University Student Id</div>
+                        <div class="value">220111634</div>
+                        
+                        <div class="label">University Roll Number</div>
+                        <div class="value">2219267</div>
+                        
+                        <div class="label">Section</div>
+                        <div class="value">L1</div>
+                        
+                        <div class="label">Class Roll Number</div>
+                        <div class="value">47</div>
+                        
+                        <div class="label">E-mail</div>
+                        <a class="value" href="pranjalsailwal09@gmail.com">pranjalsailwal09@gmail.com</a>
+                        
+                        <div class="label">Phone</div>
+                        <a class="value" href="tel:+91 7986710627">+91 79867 10627</a>
+                    </div>
+
+                    <button onclick="window.location.href='Compiler Design/index.html'" class="download-btn">PBL Compiler Design Project</button>   
+                    <button onclick="window.location.href='Operating System/index.html'" class="download-btn">PBL Operating System Project</button>
+                </div>
+            </div>
+
+            <div class="about-section">
+                <h3>About Me</h3>
+                <p>I'm Pranjal Sailwal, a dedicated Software Developer with expertise in full-stack development, system design, and AI-based solutions. I develop scalable, user-friendly applications with React, Python, Go, and DevOps tools. With a solid background in secure architectures and data analysis, I create engaging digital experiences—from satellite-based NO₂ monitoring to interactive 3D portfolios. I live for solving real-world problems with code, innovation, and clean design.</p>
+            </div>
+
+            <div class="social-links">
+                <div class="social-link"><i class="fab fa-twitter"></i></div>
+                <div class="social-link"><i class="fab fa-facebook-f"></i></div>
+                <div class="social-link"><i class="fab fa-instagram"></i></div>
+                <div class="social-link"><i class="fab fa-linkedin-in"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="keyboard-instructions">
+        Press keys to create music! Numbers for guitar, letters for piano, space/tab for drums
+    </div>
+    
+    <div class="tooltip" id="tooltip"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.39/Tone.js"></script>
+    <script>
+        // Set up loading manager
+        const loadingManager = new THREE.LoadingManager();
+        const loadingBar = document.getElementById('loading-bar');
+        const loadingScreen = document.getElementById('loading-screen');
+
+        loadingManager.onProgress = function(url, loaded, total) {
+            const progress = (loaded / total) * 100;
+            loadingBar.style.width = progress + '%';
+        };
+
+        loadingManager.onLoad = function() {
+            setTimeout(() => {
+                loadingScreen.style.opacity = 0;
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 1000);
+            }, 500);
+        };
+
+        // Setup Three.js scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({
+            canvas: document.querySelector('#bg'),
+            antialias: true,
+            alpha: true
+        });
+
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.outputEncoding = THREE.sRGBEncoding;
+
+        camera.position.set(0, 0, 5);
+
+        // Create ambient light
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        // Create directional light
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 5, 5);
+        directionalLight.castShadow = true;
+        scene.add(directionalLight);
+
+        // Create point lights with different colors
+        const pointLight1 = new THREE.PointLight(0xff7b00, 1, 100);
+        pointLight1.position.set(5, 5, 5);
+        scene.add(pointLight1);
+
+        const pointLight2 = new THREE.PointLight(0x00aaff, 1, 100);
+        pointLight2.position.set(-5, -5, 5);
+        scene.add(pointLight2);
+
+        // Create stars
+        function addStar() {
+            const geometry = new THREE.SphereGeometry(0.1, 24, 24);
+            const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const star = new THREE.Mesh(geometry, material);
+
+            const [x, y, z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(100));
+            star.position.set(x, y, z);
+            scene.add(star);
+            return star;
+        }
+
+        const stars = Array(200).fill().map(addStar);
+
+        // Create floating particles
+        const particleGeometry = new THREE.BufferGeometry();
+        const particleCount = 1000;
+        
+        const posArray = new Float32Array(particleCount * 3);
+        for(let i = 0; i < particleCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 50;
+        }
+        
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.1,
+            color: 0xff7b00,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const particleMesh = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particleMesh);
+
+        // Create geometrical background elements
+        const torusGeometry = new THREE.TorusGeometry(10, 1, 16, 100);
+        const torusMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0xff7b00,
+            wireframe: true 
+        });
+        const torus = new THREE.Mesh(torusGeometry, torusMaterial);
+        torus.position.z = -30;
+        scene.add(torus);
+
+        const icosahedronGeometry = new THREE.IcosahedronGeometry(5, 0);
+        const icosahedronMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x00aaff,
+            wireframe: true 
+        });
+        const icosahedron = new THREE.Mesh(icosahedronGeometry, icosahedronMaterial);
+        icosahedron.position.set(-20, 10, -50);
+        scene.add(icosahedron);
+
+        const octahedronGeometry = new THREE.OctahedronGeometry(4, 0);
+        const octahedronMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x00ff7f,
+            wireframe: true 
+        });
+        const octahedron = new THREE.Mesh(octahedronGeometry, octahedronMaterial);
+        octahedron.position.set(20, -10, -30);
+        scene.add(octahedron);
+
+        // Create 3D avatar
+        const avatarContainer = document.getElementById('avatar-container');
+        const avatarScene = new THREE.Scene();
+        const avatarCamera = new THREE.PerspectiveCamera(50, avatarContainer.offsetWidth / avatarContainer.offsetHeight, 0.1, 1000);
+        
+        const avatarRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        avatarRenderer.setSize(avatarContainer.offsetWidth, avatarContainer.offsetHeight);
+        avatarRenderer.shadowMap.enabled = true;
+        avatarContainer.appendChild(avatarRenderer.domElement);
+
+        // Create a stylized 3D character (simplified)
+        const headGeometry = new THREE.BoxGeometry(1, 1, 1);
+        const headMaterial = new THREE.MeshStandardMaterial({ color: 0xff9a76 });
+        const head = new THREE.Mesh(headGeometry, headMaterial);
+        avatarScene.add(head);
+
+        // Add facial features
+        const eyeGeometry = new THREE.BoxGeometry(0.2, 0.1, 0.1);
+        const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+        
+        const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+        leftEye.position.set(-0.2, 0.1, 0.5);
+        head.add(leftEye);
+        
+        const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+        rightEye.position.set(0.2, 0.1, 0.5);
+        head.add(rightEye);
+
+        const mouthGeometry = new THREE.BoxGeometry(0.3, 0.05, 0.05);
+        const mouthMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+        const mouth = new THREE.Mesh(mouthGeometry, mouthMaterial);
+
+        // Position the mouth slightly lower
+        mouth.position.set(0, -0.28, 0.5);
+
+        // Apply wavy-ish rotation
+        mouth.rotation.z = 0.1;  // tilt one end up
+        mouth.rotation.x = -0.2; // push the middle forward slightly
+
+        // Slight curve illusion using scale
+        mouth.scale.x = 1;
+        mouth.scale.y = 1;
+        mouth.scale.z = 1;
+
+        head.add(mouth);
+
+
+        // Add body
+        const bodyGeometry = new THREE.BoxGeometry(1.2, 1.5, 0.6);
+        const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000});
+        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+        body.position.y = -1.25;
+        avatarScene.add(body);
+
+        // Add lighting to avatar scene
+        const avatarAmbientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        avatarScene.add(avatarAmbientLight);
+
+        const avatarDirectionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        avatarDirectionalLight.position.set(2, 2, 5);
+        avatarScene.add(avatarDirectionalLight);
+
+        avatarCamera.position.z = 3;
+
+        // Set up audio synthesizer with Tone.js
+        const synthOptions = {
+            oscillator: {
+                type: 'sine'
+            },
+            envelope: {
+                attack: 0.005,
+                decay: 0.1,
+                sustain: 0.3,
+                release: 1
+            }
+        };
+
+        // Create different synthesizers for different key types
+        const pianoSynth = new Tone.PolySynth(Tone.Synth, synthOptions).toDestination();
+        pianoSynth.volume.value = -10;
+
+        const guitarSynth = new Tone.PolySynth(Tone.FMSynth).toDestination();
+        guitarSynth.volume.value = -15;
+
+        // For drums, use a membrane synth and noise synth
+        const kickSynth = new Tone.MembraneSynth({
+            pitchDecay: 0.05,
+            octaves: 5,
+            oscillator: { type: 'sine' },
+            envelope: {
+                attack: 0.001,
+                decay: 0.4,
+                sustain: 0.01,
+                release: 1.4
+            }
+        }).toDestination();
+        kickSynth.volume.value = -10;
+
+        const snareSynth = new Tone.NoiseSynth({
+            noise: { type: 'white' },
+            envelope: {
+                attack: 0.001,
+                decay: 0.2,
+                sustain: 0
+            }
+        }).toDestination();
+        snareSynth.volume.value = -15;
+
+        const hihatSynth = new Tone.NoiseSynth({
+            noise: { type: 'white' },
+            envelope: {
+                attack: 0.001,
+                decay: 0.1,
+                sustain: 0
+            }
+        }).toDestination();
+        hihatSynth.volume.value = -20;
+
+        // Piano notes mapping (A-Z keys)
+        const pianoNotes = {
+            'a': 'C4', 'w': 'C#4', 's': 'D4', 'e': 'D#4', 'd': 'E4', 'f': 'F4', 't': 'F#4',
+            'g': 'G4', 'y': 'G#4', 'h': 'A4', 'u': 'A#4', 'j': 'B4', 'k': 'C5', 'o': 'C#5',
+            'l': 'D5', 'p': 'D#5', ';': 'E5', "'": 'F5', 'z': 'F#5', 'x': 'G5', 'c': 'G#5',
+            'v': 'A5', 'b': 'B5', 'n': 'C6', 'm': 'D6', ',': 'E6', '.': 'F6', '/': 'G6'
+        };
+
+        // Guitar notes mapping (0-9 keys)
+        const guitarNotes = {
+            '0': 'E2', '1': 'F2', '2': 'G2', '3': 'A2', '4': 'B2',
+            '5': 'C3', '6': 'D3', '7': 'E3', '8': 'F3', '9': 'G3'
+        };
+
+        // Drum sounds mapping (special keys)
+        const drumTriggers = {
+            ' ': 'kick',    // Space
+            'Tab': 'snare',
+            'Shift': 'hihat',
+            'Enter': 'tom',
+            'Backspace': 'cymbal',
+            'Control': 'rim',
+            'Alt': 'clap'
+        };
+
+        // Function to play drum sounds
+        function playDrumSound(type) {
+            switch(type) {
+                case 'kick':
+                    kickSynth.triggerAttackRelease('C1', '8n');
+                    animateShape(torus, 1.2);
+                    break;
+                case 'snare':
+                    snareSynth.triggerAttackRelease('16n');
+                    animateShape(icosahedron, 1.2);
+                    break;
+                case 'hihat':
+                    hihatSynth.triggerAttackRelease('32n');
+                    animateShape(octahedron, 1.2);
+                    break;
+                case 'tom':
+                    kickSynth.triggerAttackRelease('A1', '8n');
+                    animateShape(torus, 1.1);
+                    break;
+                case 'cymbal':
+                    hihatSynth.triggerAttackRelease('8n');
+                    animateShape(icosahedron, 1.1);
+                    break;
+                case 'rim':
+                    snareSynth.triggerAttackRelease('32n');
+                    animateShape(octahedron, 1.1);
+                    break;
+                case 'clap':
+                    snareSynth.triggerAttackRelease('16n');
+                    animateShape(particleMesh, 1.3);
+                    break;
+            }
+        }
+
+        // Function to animate a shape when a sound is played
+        function animateShape(shape, scale = 1.2) {
+            gsap.to(shape.scale, {
+                x: scale,
+                y: scale,
+                z: scale,
+                duration: 0.1,
+                ease: 'power1.out',
+                onComplete: () => {
+                    gsap.to(shape.scale, {
+                        x: 1,
+                        y: 1,
+                        z: 1,
+                        duration: 0.3,
+                        ease: 'elastic.out(1, 0.3)'
+                    });
+                }
+            });
+
+            // Also add a color change
+            const originalColor = shape.material.color.clone();
+            const highlightColor = new THREE.Color(Math.random(), Math.random(), Math.random());
+            
+            gsap.to(shape.material.color, {
+                r: highlightColor.r,
+                g: highlightColor.g,
+                b: highlightColor.b,
+                duration: 0.1,
+                onComplete: () => {
+                    gsap.to(shape.material.color, {
+                        r: originalColor.r,
+                        g: originalColor.g,
+                        b: originalColor.b,
+                        duration: 0.5
+                    });
+                }
+            });
+        }
+
+        // Function to visualize a note being played
+        function visualizeNote(note) {
+            // Create a small sphere that flies from camera towards the scene
+            const noteVisualizerGeometry = new THREE.SphereGeometry(0.2, 8, 8);
+            const noteVisualizerMaterial = new THREE.MeshStandardMaterial({
+                color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+                emissive: new THREE.Color(Math.random(), Math.random(), Math.random()),
+                emissiveIntensity: 0.5,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            const noteVisualizer = new THREE.Mesh(noteVisualizerGeometry, noteVisualizerMaterial);
+            noteVisualizer.position.set(
+                (Math.random() - 0.5) * 5,
+                (Math.random() - 0.5) * 5,
+                camera.position.z - 2
+            );
+            scene.add(noteVisualizer);
+            
+            // Animate the sphere towards the scene
+            gsap.to(noteVisualizer.position, {
+                z: -50,
+                duration: 2,
+                ease: 'power1.in',
+                onComplete: () => {
+                    scene.remove(noteVisualizer);
+                    noteVisualizer.geometry.dispose();
+                    noteVisualizer.material.dispose();
+                }
+            });
+            
+            gsap.to(noteVisualizer.scale, {
+                x: 0,
+                y: 0,
+                z: 0,
+                duration: 2,
+                ease: 'power1.in'
+            });
+        }
+
+        // Set up keyboard event listeners
+        document.addEventListener('keydown', (event) => {
+            const key = event.key.toLowerCase();
+            
+            if (pianoNotes[key]) {
+                pianoSynth.triggerAttackRelease(pianoNotes[key], '8n');
+                visualizeNote(pianoNotes[key]);
+                // Also animate the avatar's head
+                gsap.to(head.rotation, {
+                    y: Math.random() * 0.2 - 0.1,
+                    duration: 0.1,
+                    ease: 'power1.out',
+                    onComplete: () => {
+                        gsap.to(head.rotation, {
+                            y: 0,
+                            duration: 0.3,
+                            ease: 'elastic.out(1, 0.3)'
+                        });
+                    }
+                });
+            }
+            
+            if (guitarNotes[key]) {
+                guitarSynth.triggerAttackRelease(guitarNotes[key], '4n');
+                visualizeNote(guitarNotes[key]);
+                // Animate the avatar's body
+                gsap.to(body.rotation, {
+                    y: Math.random() * 0.3 - 0.15,
+                    duration: 0.1,
+                    ease: 'power1.out',
+                    onComplete: () => {
+                        gsap.to(body.rotation, {
+                            y: 0,
+                            duration: 0.5,
+                            ease: 'elastic.out(1, 0.3)'
+                        });
+                    }
+                });
+            }
+            
+            if (drumTriggers[event.key]) {
+                playDrumSound(drumTriggers[event.key]);
+                // Jump animation for the avatar
+                gsap.to(avatarScene.position, {
+                    y: 0.3,
+                    duration: 0.1,
+                    ease: 'power1.out',
+                    onComplete: () => {
+                        gsap.to(avatarScene.position, {
+                            y: 0,
+                            duration: 0.3,
+                            ease: 'bounce.out'
+                        });
+                    }
+                });
+            }
+        });
+
+        // Mouse interaction setup
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        const tooltip = document.getElementById('tooltip');
+
+        function onMouseMove(event) {
+            // Update the mouse position for raycasting
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+            
+            // Update the tooltip position
+            tooltip.style.left = event.clientX + 10 + 'px';
+            tooltip.style.top = event.clientY + 10 + 'px';
+        }
+
+        function onMouseOver(event) {
+            const target = event.target;
+            if (target.classList.contains('nav-link') || 
+                target.classList.contains('download-btn') ||
+                target.classList.contains('social-link')) {
+                
+                gsap.to(target, {
+                    scale: 1.1,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+                
+                // Create a ripple effect
+                if (target.classList.contains('nav-link')) {
+                    tooltip.textContent = 'Navigate to ' + target.textContent;
+                    tooltip.style.opacity = 1;
+                }
+                else if (target.classList.contains('download-btn')) {
+                    tooltip.textContent = 'Download Andrew\'s Resume';
+                    tooltip.style.opacity = 1;
+                }
+                else if (target.classList.contains('social-link')) {
+                    tooltip.textContent = 'Connect on ' + target.querySelector('i').className.split('-')[1];
+                    tooltip.style.opacity = 1;
+                }
+                
+                // Play a subtle hover sound
+                const hoverSynth = new Tone.Synth({
+                    oscillator: { type: 'sine' },
+                    envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
+                }).toDestination();
+                hoverSynth.volume.value = -20;
+                hoverSynth.triggerAttackRelease('C6', '32n');
+            }
+        }
+
+        function onMouseOut(event) {
+            const target = event.target;
+            if (target.classList.contains('nav-link') || 
+                target.classList.contains('download-btn') ||
+                target.classList.contains('social-link')) {
+                
+                gsap.to(target, {
+                    scale: 1,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+                
+                tooltip.style.opacity = 0;
+            }
+        }
+
+        function onClick(event) {
+            const target = event.target;
+            
+            if (target.classList.contains('nav-link') || 
+                target.classList.contains('download-btn') ||
+                target.classList.contains('social-link')) {
+                
+                // Create click ripple effect
+                const ripple = document.createElement('div');
+                ripple.style.position = 'absolute';
+                ripple.style.width = '10px';
+                ripple.style.height = '10px';
+                ripple.style.background = '#ff7b00';
+                ripple.style.borderRadius = '50%';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.transform = 'translate(-50%, -50%)';
+                ripple.style.left = (event.clientX - target.getBoundingClientRect().left) + 'px';
+                ripple.style.top = (event.clientY - target.getBoundingClientRect().top) + 'px';
+                target.appendChild(ripple);
+                
+                gsap.to(ripple, {
+                    width: '300px',
+                    height: '300px',
+                    opacity: 0,
+                    duration: 0.6,
+                    ease: 'power1.out',
+                    onComplete: () => {
+                        target.removeChild(ripple);
+                    }
+                });
+                
+                // Play click sound
+                const clickSynth = new Tone.MembraneSynth({
+                    pitchDecay: 0.01,
+                    octaves: 1,
+                    oscillator: { type: 'sine' },
+                    envelope: {
+                        attack: 0.001,
+                        decay: 0.2,
+                        sustain: 0,
+                        release: 0.1
+                    }
+                }).toDestination();
+                clickSynth.volume.value = -15;
+                clickSynth.triggerAttackRelease('C4', '16n');
+                
+                // Create a 3D ripple in the Three.js scene
+                const geometry = new THREE.RingGeometry(0.1, 0.2, 32);
+                const material = new THREE.MeshBasicMaterial({ 
+                    color: 0xff7b00,
+                    transparent: true,
+                    opacity: 0.8,
+                    side: THREE.DoubleSide
+                });
+                
+                const ring = new THREE.Mesh(geometry, material);
+                scene.add(ring);
+                
+                // Position the ring in front of the camera
+                ring.position.set(
+                    (Math.random() - 0.5) * 5,
+                    (Math.random() - 0.5) * 5,
+                    camera.position.z - 2
+                );
+                
+                // Animate the ring
+                gsap.to(ring.scale, {
+                    x: 20,
+                    y: 20,
+                    z: 20,
+                    duration: 1,
+                    ease: 'power1.out'
+                });
+                
+                gsap.to(material, {
+                    opacity: 0,
+                    duration: 1,
+                    ease: 'power1.out',
+                    onComplete: () => {
+                        scene.remove(ring);
+                        geometry.dispose();
+                        material.dispose();
+                    }
+                });
+            }
+        }
+
+        // Add event listeners for mouse interaction
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('click', onClick);
+        
+        // Add event listeners for UI elements
+        const navLinks = document.querySelectorAll('.nav-link');
+        const downloadBtn = document.querySelector('.download-btn');
+        const socialLinks = document.querySelectorAll('.social-link');
+        
+        [...navLinks, downloadBtn, ...socialLinks].forEach(element => {
+            element.addEventListener('mouseover', onMouseOver);
+            element.addEventListener('mouseout', onMouseOut);
+        });
+
+        // Container parallax effect
+        const mainContainer = document.getElementById('main-container');
+        
+        document.addEventListener('mousemove', (event) => {
+            const x = (window.innerWidth / 2 - event.clientX) / 50;
+            const y = (window.innerHeight / 2 - event.clientY) / 50;
+            
+            gsap.to(mainContainer, {
+                rotationY: x,
+                rotationX: y,
+                duration: 0.5,
+                ease: 'power1.out'
+            });
+        });
+
+        // Add resize handler
+        function onWindowResize() {
+            // Update main camera and renderer
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            // Update avatar camera and renderer
+            avatarCamera.aspect = avatarContainer.offsetWidth / avatarContainer.offsetHeight;
+            avatarCamera.updateProjectionMatrix();
+            avatarRenderer.setSize(avatarContainer.offsetWidth, avatarContainer.offsetHeight);
+        }
+
+        window.addEventListener('resize', onWindowResize);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotate background elements
+            torus.rotation.x += 0.003;
+            torus.rotation.y += 0.005;
+            
+            icosahedron.rotation.x += 0.002;
+            icosahedron.rotation.y -= 0.003;
+            
+            octahedron.rotation.x -= 0.004;
+            octahedron.rotation.z += 0.002;
+            
+            // Animate particles
+            particleMesh.rotation.y += 0.0005;
+            
+            const particlePositions = particleMesh.geometry.attributes.position.array;
+            for (let i = 0; i < particlePositions.length; i += 3) {
+                // Add subtle movement to particles
+                particlePositions[i] += Math.sin(Date.now() * 0.001 + i) * 0.01;
+                particlePositions[i + 1] += Math.cos(Date.now() * 0.002 + i) * 0.01;
+            }
+            particleMesh.geometry.attributes.position.needsUpdate = true;
+            
+            // Animate stars
+            stars.forEach((star, index) => {
+                // Make stars twinkle
+                const scale = 0.8 + Math.sin(Date.now() * 0.001 + index) * 0.2;
+                star.scale.set(scale, scale, scale);
+            });
+            
+            // Animate avatar in its own scene
+            head.rotation.y = Math.sin(Date.now() * 0.001) * 0.1;
+            head.position.y = Math.sin(Date.now() * 0.002) * 0.05;
+            
+            // Render both scenes
+            renderer.render(scene, camera);
+            avatarRenderer.render(avatarScene, avatarCamera);
+        }
+
+        // Initialize audio context on first user interaction
+        document.addEventListener('click', function initAudio() {
+            if (Tone.context.state !== 'running') {
+                Tone.context.resume();
+            }
+            document.removeEventListener('click', initAudio);
+        });
+
+        // Start the animation loop
+        animate();
+
+        // Add some preset patterns that can be triggered
+        const musicalPatterns = {
+            melody: function() {
+                const notes = ['C4', 'E4', 'G4', 'C5', 'G4', 'E4'];
+                const duration = '8n';
+                let index = 0;
+                
+                const interval = setInterval(() => {
+                    pianoSynth.triggerAttackRelease(notes[index], duration);
+                    visualizeNote(notes[index]);
+                    index = (index + 1) % notes.length;
+                    
+                    // Stop after two cycles
+                    if (index === 0 && Math.random() > 0.5) {
+                        clearInterval(interval);
+                    }
+                }, 250);
+            },
+            
+            bass: function() {
+                const notes = ['C2', 'G2', 'C2', 'G2', 'A#2', 'F2'];
+                const duration = '4n';
+                let index = 0;
+                
+                const interval = setInterval(() => {
+                    guitarSynth.triggerAttackRelease(notes[index], duration);
+                    visualizeNote(notes[index]);
+                    index = (index + 1) % notes.length;
+                    
+                    // Stop after two cycles
+                    if (index === 0 && Math.random() > 0.5) {
+                        clearInterval(interval);
+                    }
+                }, 500);
+            },
+            
+            drums: function() {
+                const pattern = ['kick', 'hihat', 'snare', 'hihat'];
+                let index = 0;
+                
+                const interval = setInterval(() => {
+                    playDrumSound(pattern[index]);
+                    index = (index + 1) % pattern.length;
+                    
+                    // Stop after 8 cycles
+                    if (index === 0 && Math.random() > 0.8) {
+                        clearInterval(interval);
+                    }
+                }, 250);
+            }
+        };
+
+        // Occasionally trigger musical patterns
+        function startRandomPatterns() {
+            setInterval(() => {
+                // Only trigger patterns when the user hasn't played anything recently (last 5 seconds)
+                const now = Date.now();
+                if (now - lastUserInteraction > 5000 && Math.random() > 0.7) {
+                    const patterns = Object.values(musicalPatterns);
+                    const randomPattern = patterns[Math.floor(Math.random() * patterns.length)];
+                    randomPattern();
+                }
+            }, 10000);  // Check every 10 seconds
+        }
+
+        let lastUserInteraction = 0;
+        document.addEventListener('keydown', () => {
+            lastUserInteraction = Date.now();
+        });
+
+        // Start the random pattern generator after a delay
+        setTimeout(startRandomPatterns, 20000);
+
+        // Initialize the scene with an intro animation
+        function introAnimation() {
+            // Fade in the container
+            gsap.fromTo(mainContainer, 
+                { opacity: 0, scale: 0.9 }, 
+                { opacity: 1, scale: 1, duration: 1, ease: 'power2.out', delay: 0.5 }
+            );
+            
+            // Animate in the navigation links one by one
+            gsap.fromTo(navLinks, 
+                { y: -20, opacity: 0 }, 
+                { 
+                    y: 0, 
+                    opacity: 1, 
+                    duration: 0.5, 
+                    stagger: 0.1, 
+                    ease: 'back.out(1.7)',
+                    delay: 1
+                }
+            );
+            
+            // Animate in the profile details
+            gsap.fromTo('.profile-details', 
+                { x: 50, opacity: 0 }, 
+                { x: 0, opacity: 1, duration: 0.8, ease: 'power2.out', delay: 1.5 }
+            );
+            
+            // Animate in the social links
+            gsap.fromTo('.social-link', 
+                { y: 20, opacity: 0 }, 
+                { 
+                    y: 0, 
+                    opacity: 1, 
+                    duration: 0.5, 
+                    stagger: 0.1, 
+                    ease: 'back.out(1.7)',
+                    delay: 2
+                }
+            );
+            
+            // Animate camera position
+            gsap.fromTo(camera.position,
+                { z: 20 },
+                { z: 5, duration: 2, ease: 'power2.out' }
+            );
+            
+            // Play a welcome melody
+            setTimeout(() => {
+                const welcomeNotes = ['C4', 'E4', 'G4', 'C5'];
+                welcomeNotes.forEach((note, index) => {
+                    setTimeout(() => {
+                        pianoSynth.triggerAttackRelease(note, '8n');
+                        visualizeNote(note);
+                    }, index * 200);
+                });
+            }, 1500);
+        }
+
+        // Start intro animation after loading
+        loadingManager.onLoad = function() {
+            setTimeout(() => {
+                loadingScreen.style.opacity = 0;
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    introAnimation();
+                }, 1000);
+            }, 500);
+        };
+    </script>
+</body>
+</html>
