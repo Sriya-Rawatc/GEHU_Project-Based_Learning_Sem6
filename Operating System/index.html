@@ -986,6 +986,47 @@
   </section>
 
 
+  <!-- Colorful Floating Time Notice -->
+  <div id="time-notice-chatbot" style="
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-width: 300px;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  padding: 16px 20px;
+  font-size: 14px;
+  z-index: 9999;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(-25px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+  ">
+  <div style="font-size: 20px; line-height: 1;">🤖</div>
+  <div>
+    <div style="font-weight: 600; margin-bottom: 4px;">Heads-up!</div>
+    All time shown is in <strong>milliseconds (ms)</strong>. If a value is exactly 1 second, it will be shown in <strong>seconds (sec)</strong>.
+  </div>
+  </div>
+
+  <script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const notice = document.getElementById("time-notice-chatbot");
+    if (notice) {
+      setTimeout(() => {
+        notice.style.opacity = "1";
+        notice.style.transform = "translateY(0)";
+      }, 300);
+    }
+  });
+  </script>
 
 
   <div class="logo">
@@ -1163,7 +1204,7 @@
           P1
         </div>
         <div class="p-0 m-auto display-6">
-          <h4>Time: <span id="vis_time" class="bg-1" style="background-color: rgba(177, 177, 17, 0.723);"></span></h4>
+          <h4>Time (ms): <span id="vis_time" class="bg-1" style="background-color: rgba(177, 177, 17, 0.723);"></span></h4>
           <a class="btn btn-outline-danger" href="javascript:void(0)" id="vis_stop">STOP!</a>
         </div>
       </div>
