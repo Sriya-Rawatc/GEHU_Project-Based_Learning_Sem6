@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Docs Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      cursor: none;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+      font-family: 'Roboto Mono', monospace;
+      background: #000;
+      color: #fff;
+    }
+
+    body {
+      display: flex;
+      flex-direction: row;
+      scroll-snap-type: x mandatory;
+      overflow-x: scroll;
+      scroll-behavior: smooth;
+    }
+
+    section {
+      scroll-snap-align: start;
+      min-width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      padding: 3rem;
+      transition: all 0.8s ease-in-out;
+      transform: scale(0.98);
+    }
+
+    section:hover {
+      transform: scale(1.01);
+    }
+
+    .section1 { background: radial-gradient(circle, #141e30, #243b55); }
+    .section2 { background: linear-gradient(to right, #020024, #090979, #00d4ff); }
+    .section3 { background: linear-gradient(to right, #000000, #434343); }
+    .section4 { background: linear-gradient(to right, #1c1c1c, #0d7377); }
+    .section5 { background: linear-gradient(to right, #370617, #6a040f, #9d0208); }
+    .section6 { background: linear-gradient(to right, #0f4c75, #3282b8); }
+    .section7 { background: linear-gradient(to right, #2f0743, #41295a); }
+    .section8 { background: linear-gradient(to right, #134e5e, #71b280); }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 80px;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      backdrop-filter: blur(6px);
+    }
+
+    .navbar i {
+      margin: 20px 0;
+      color: #00ffff;
+      font-size: 24px;
+      transition: transform 0.3s ease, color 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .navbar i:hover {
+      transform: scale(1.4);
+      color: #fff;
+    }
+
+    .navbar i::after {
+      content: attr(data-title);
+      position: absolute;
+      left: 50px;
+      top: 0;
+      white-space: nowrap;
+      background: #00ffff;
+      color: #000;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
+
+    .navbar i:hover::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .cursor {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #00ffff;
+      border-radius: 50%;
+      position: fixed;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 10000;
+      transition: all 0.08s ease;
+    }
+
+    .progress-track {
+      position: fixed;
+      top: 0;
+      left: 80px;
+      height: 5px;
+      background: #333;
+      width: calc(100vw - 80px);
+      z-index: 999;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #00ffff;
+      width: 0%;
+      animation: bounceBar 2s ease infinite;
+    }
+
+    @keyframes bounceBar {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-2px);
+      }
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    p {
+      max-width: 600px;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="navbar">
+    <i class="fas fa-house" data-title="Home" onclick="goTo(0)"></i>
+    <i class="fas fa-terminal" data-title="Editor" onclick="goTo(1)"></i>
+    <i class="fas fa-file-alt" data-title="Docs" onclick="goTo(2)"></i>
+    <i class="fas fa-code" data-title="Code" onclick="goTo(3)"></i>
+    <i class="fas fa-bolt" data-title="Analytics" onclick="goTo(4)"></i>
+    <i class="fas fa-rocket" data-title="Themes" onclick="goTo(5)"></i>
+    <i class="fas fa-brain" data-title="AI" onclick="goTo(6)"></i>
+    <i class="fas fa-vr-cardboard" data-title="XR" onclick="goTo(7)"></i>
+  </div>
+  <div class="progress-track">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="cursor" id="cursor"></div>
+
+  <section class="section1">
+    <h1>🚀 Project Docs Hub</h1>
+    <p>Welcome to your futuristic documentation portal — blazing-fast, ultra-styled, and endlessly extensible.</p>
+  </section>
+
+  <section class="section2">
+    <h1>📚 Write Seamlessly</h1>
+    <p>Use dynamic markdown rendering, custom themes, and live preview while documenting your codebase or API.</p>
+  </section>
+
+  <section class="section3">
+    <h1>⚙️ Dev Playground</h1>
+    <p>Render sandboxed code editors, embed StackBlitz/Replit, and simulate modules with live APIs.</p>
+  </section>
+
+  <section class="section4">
+    <h1>📈 Analytics Dashboard</h1>
+    <p>Plug in real-time stats, edit graphs, inspect change logs and monitor performance metrics visually.</p>
+  </section>
+
+  <section class="section5">
+    <h1>🎨 Theme Customizer</h1>
+    <p>Let users personalize the look and feel using a built-in GUI for themes, fonts, and layout adjustments.</p>
+  </section>
+
+  <section class="section6">
+    <h1>💡 AI Suggestions</h1>
+    <p>Integrated AI assistant to auto-suggest documentation structure, glossary, and improve clarity on-the-go.</p>
+  </section>
+
+  <section class="section7">
+    <h1>🧠 Knowledge Base</h1>
+    <p>Manage reusable definitions, FAQs, and auto-linked technical terms in a searchable format.</p>
+  </section>
+
+  <section class="section8">
+    <h1>🕶️ XR Integration</h1>
+    <p>Embed augmented/virtual reality visualizations and make your technical guides futuristic.</p>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script>
+    const sections = document.querySelectorAll('section');
+    const progressBar = document.getElementById('progressBar');
+    const cursor = document.getElementById('cursor');
+
+    document.addEventListener('mousemove', e => {
+      cursor.style.top = `${e.clientY}px`;
+      cursor.style.left = `${e.clientX}px`;
+    });
+
+    window.addEventListener('scroll', () => {
+      const scrollLeft = window.scrollX;
+      const docWidth = document.body.scrollWidth - window.innerWidth;
+      const scrolled = (scrollLeft / docWidth) * 100;
+      progressBar.style.width = `${scrolled}%`;
+    });
+
+    function goTo(index) {
+      sections[index].scrollIntoView({ behavior: 'smooth', inline: 'start' });
+    }
+
+    sections.forEach((sec) => {
+      gsap.from(sec, {
+        scrollTrigger: {
+          trigger: sec,
+          start: 'left center',
+          toggleActions: 'play none none reverse',
+          horizontal: true,
+          scrub: true
+        },
+        opacity: 0,
+        x: 100,
+        duration: 1.5,
+        ease: 'expo.out'
+      });
+    });
+  </script>
+</body>
+
+</html>
