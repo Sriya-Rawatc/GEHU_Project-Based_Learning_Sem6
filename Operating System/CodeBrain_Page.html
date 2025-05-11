@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +15,6 @@
       box-sizing: border-box;
       cursor: none;
     }
-
     html, body {
       height: 100%;
       width: 100%;
@@ -25,7 +23,6 @@
       background: #000;
       color: #fff;
     }
-
     body {
       display: flex;
       flex-direction: row;
@@ -33,7 +30,6 @@
       overflow-x: scroll;
       scroll-behavior: smooth;
     }
-
     section {
       scroll-snap-align: start;
       min-width: 100vw;
@@ -47,11 +43,9 @@
       transition: all 0.8s ease-in-out;
       transform: scale(0.98);
     }
-
     section:hover {
       transform: scale(1.01);
     }
-
     .section1 { background: radial-gradient(circle, #141e30, #243b55); }
     .section2 { background: linear-gradient(to right, #020024, #090979, #00d4ff); }
     .section3 { background: linear-gradient(to right, #000000, #434343); }
@@ -60,7 +54,6 @@
     .section6 { background: linear-gradient(to right, #0f4c75, #3282b8); }
     .section7 { background: linear-gradient(to right, #2f0743, #41295a); }
     .section8 { background: linear-gradient(to right, #134e5e, #71b280); }
-
     .navbar {
       position: fixed;
       top: 0;
@@ -75,7 +68,6 @@
       z-index: 999;
       backdrop-filter: blur(6px);
     }
-
     .navbar i {
       margin: 20px 0;
       color: #00ffff;
@@ -84,12 +76,10 @@
       cursor: pointer;
       position: relative;
     }
-
     .navbar i:hover {
       transform: scale(1.4);
       color: #fff;
     }
-
     .navbar i::after {
       content: attr(data-title);
       position: absolute;
@@ -106,12 +96,10 @@
       transition: opacity 0.3s ease, transform 0.3s ease;
       pointer-events: none;
     }
-
     .navbar i:hover::after {
       opacity: 1;
       transform: scale(1);
     }
-
     .cursor {
       width: 20px;
       height: 20px;
@@ -123,7 +111,6 @@
       z-index: 10000;
       transition: all 0.08s ease;
     }
-
     .progress-track {
       position: fixed;
       top: 0;
@@ -133,14 +120,12 @@
       width: calc(100vw - 80px);
       z-index: 999;
     }
-
     .progress-bar {
       height: 100%;
       background: #00ffff;
       width: 0%;
       animation: bounceBar 2s ease infinite;
     }
-
     @keyframes bounceBar {
       0%, 100% {
         transform: translateY(0);
@@ -149,13 +134,11 @@
         transform: translateY(-2px);
       }
     }
-
     h1 {
       font-family: 'Orbitron', sans-serif;
       font-size: 3rem;
       margin-bottom: 20px;
     }
-
     p {
       max-width: 600px;
       text-align: center;
@@ -163,7 +146,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="navbar">
     <i class="fas fa-house" data-title="Home" onclick="goTo(0)"></i>
@@ -178,72 +160,58 @@
   <div class="progress-track">
     <div class="progress-bar" id="progressBar"></div>
   </div>
-
   <div class="cursor" id="cursor"></div>
-
   <section class="section1">
     <h1>🚀 Project Docs Hub</h1>
     <p>Welcome to your futuristic documentation portal — blazing-fast, ultra-styled, and endlessly extensible.</p>
   </section>
-
   <section class="section2">
     <h1>📚 Write Seamlessly</h1>
     <p>Use dynamic markdown rendering, custom themes, and live preview while documenting your codebase or API.</p>
   </section>
-
   <section class="section3">
     <h1>⚙️ Dev Playground</h1>
     <p>Render sandboxed code editors, embed StackBlitz/Replit, and simulate modules with live APIs.</p>
   </section>
-
   <section class="section4">
     <h1>📈 Analytics Dashboard</h1>
     <p>Plug in real-time stats, edit graphs, inspect change logs and monitor performance metrics visually.</p>
   </section>
-
   <section class="section5">
     <h1>🎨 Theme Customizer</h1>
     <p>Let users personalize the look and feel using a built-in GUI for themes, fonts, and layout adjustments.</p>
   </section>
-
   <section class="section6">
     <h1>💡 AI Suggestions</h1>
     <p>Integrated AI assistant to auto-suggest documentation structure, glossary, and improve clarity on-the-go.</p>
   </section>
-
   <section class="section7">
     <h1>🧠 Knowledge Base</h1>
     <p>Manage reusable definitions, FAQs, and auto-linked technical terms in a searchable format.</p>
   </section>
-
   <section class="section8">
     <h1>🕶️ XR Integration</h1>
     <p>Embed augmented/virtual reality visualizations and make your technical guides futuristic.</p>
   </section>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script>
     const sections = document.querySelectorAll('section');
     const progressBar = document.getElementById('progressBar');
     const cursor = document.getElementById('cursor');
-
     document.addEventListener('mousemove', e => {
       cursor.style.top = `${e.clientY}px`;
       cursor.style.left = `${e.clientX}px`;
     });
-
     window.addEventListener('scroll', () => {
       const scrollLeft = window.scrollX;
       const docWidth = document.body.scrollWidth - window.innerWidth;
       const scrolled = (scrollLeft / docWidth) * 100;
       progressBar.style.width = `${scrolled}%`;
     });
-
     function goTo(index) {
       sections[index].scrollIntoView({ behavior: 'smooth', inline: 'start' });
     }
-
     sections.forEach((sec) => {
       gsap.from(sec, {
         scrollTrigger: {
@@ -261,5 +229,4 @@
     });
   </script>
 </body>
-
 </html>
