@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios"
 
-const pistonBaseUrl = "https://pbl-project-compiler-design-sever.onrender.com"
+const pistonBaseUrl = "https://emkc.org/api/v2/piston"
 
 const instance: AxiosInstance = axios.create({
     baseURL: pistonBaseUrl,
