@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SJFNonPre scheduling algorithm </title>
+    <title>SJFPre scheduling algorithm </title>
     <style>
         /* Base Styles */
         :root {
@@ -420,8 +420,8 @@
         <div class="custom-nav-links" id="custom-nav-links">
             <a href="/Operating System/CodeBrain_Page.html" class="custom-nav-link">About</a>
             <a href="./documentation assests/pages/fcfs.html" class="custom-nav-link ">FCFS</a>
-            <a href="/Operating System/documentation assests/pages/sjf.html" class="custom-nav-link active">SJF</a>
-            <a href="/Operating System/documentation assests/pages/sjfpre.html" class="custom-nav-link">SJF(Preemptive)</a>
+            <a href="/Operating System/documentation assests/pages/sjf.html" class="custom-nav-link ">SJF</a>
+            <a href="/Operating System/documentation assests/pages/sjfpre.html" class="custom-nav-link active">SJF(Preemptive)</a>
             <a href="/Operating System/documentation assests/pages/ljf.html" class="custom-nav-link">LJF</a>
             <a href="/Operating System/documentation assests/pages/ljfpre.html" class="custom-nav-link">LJF(Preemptive)</a>
             <a href="/Operating System/documentation assests/pages/prior.html" class="custom-nav-link">Priority</a>
@@ -442,8 +442,8 @@
     <div class="custom-drawer" id="custom-drawer">
         <a href="/Operating System/CodeBrain_Page.html" class="custom-drawer-link">About</a>
         <a href="./documentation assests/pages/fcfs.html" class="custom-drawer-link">FCFS</a>
-        <a href="/Operating System/documentation assests/pages/sjf.html" class="custom-drawer-link active">SJF</a>
-        <a href="/Operating System/documentation assests/pages/sjfpre.html" class="custom-drawer-link">SJF(Preemptive)</a>
+        <a href="/Operating System/documentation assests/pages/sjf.html" class="custom-drawer-link">SJF</a>
+        <a href="/Operating System/documentation assests/pages/sjfpre.html" class="custom-drawer-link active">SJF(Preemptive)</a>
         <a href="/Operating System/documentation assests/pages/ljf.html" class="custom-drawer-link">LJF</a>
         <a href="/Operating System/documentation assests/pages/ljfpre.html" class="custom-drawer-link">LJF(Preemptive)</a>
         <a href="/Operating System/documentation assests/pages/prior.html" class="custom-drawer-link">Priority</a>
@@ -578,39 +578,39 @@
 
     <!-- Main Content -->
     <main>
-        <h1 class="page-title">SJFNonPre (Shortest Job First) Scheduling</h1>
+        <h1 class="page-title">SJFPre (Shortest Job First Preamptive) Scheduling</h1>
 
         <div class="two-column-layout">
             <div class="card">
                 <h1>Definition:</h1>
-                <p>The shortest job first (SJF) or shortest job next, is a scheduling policy that selects the waiting process with the smallest execution time to execute next.</p>
-                <h3>Why SJF?</h3>
+                <p>In SRTF, the process with the least time left to finish is selected to run. The running process will continue until it finishes or a new process with a shorter remaining time arrives.</p>
+                <h3>Why SJF Preamptive?</h3>
                 <ul>
-                    <li>Minimizes average waiting time compared to FCFS</li>
-                    <li>Efficient for short processes — gives priority to shorter jobs</li>
-                    <li>Suitable for batch systems with known burst times</li>
+                    <li>Provides better average turnaround and waiting time than non-preemptive SJF</li>
+                    <li>Gives immediate priority to shorter remaining time processes</li>
+                    <li>Suitable for time-sharing and interactive systems</li>
+
                 </ul>
                 <a href="https://www.sciencedirect.com/topics/computer-science/first-come-first-served">
                     <div class="btn">Learn More</div>
                 </a>
 
                 <div style="padding: 1.5rem; background-color: #f4f6f8; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); font-family: Arial, sans-serif; color: #333;">
-                    <h2 style="margin-bottom: 1rem; font-size: 1.6rem; color: #222;">SJFNonPre Scheduling Code Explanation</h2>
+                    <h2 style="margin-bottom: 1rem; font-size: 1.6rem; color: #222;">SJFPre Scheduling Code Explanation</h2>
                     <ol style="padding-left: 1.2rem; line-height: 1.6;">
                         <li>Initializes the ready queue and sets the initial simulation time to 0.</li>
-                        <li>Creates arrays to store turnaround and waiting times.</li>
+                        <li>Creates arrays to store turnaround, waiting, and response times.</li>
                         <li>If visual mode is enabled, UI elements are prepared for animation.</li>
-                        <li>The main loop runs until all processes are executed (ready queue is empty).</li>
-                        <li>Processes that have arrived by the current time are added to a temporary list.</li>
-                        <li>If no process is ready, idle time is recorded in the Gantt chart.</li>
-                        <li>From the ready processes, the one with the shortest burst time is selected.</li>
-                        <li>If visual mode is active, the UI displays the selected process for simulation.</li>
-                        <li>The selected process runs to completion; the current time is incremented by its burst time.</li>
-                        <li>Turnaround time = finish time - arrival time; Waiting time = turnaround time - burst time.</li>
-                        <li>The executed process is removed from the ready queue.</li>
-                        <li>Execution details are recorded in the Gantt chart, and the temporary list is cleared.</li>
-                        <li>After all processes finish, average turnaround, waiting, and response times are calculated.</li>
-
+                        <li>The main loop runs until all processes are completed (ready queue is empty and no process is left).</li>
+                        <li>At each time unit, processes that have arrived are added to the ready queue.</li>
+                        <li>If no process is ready, idle time is recorded in the Gantt chart and time is incremented.</li>
+                        <li>From the ready queue, the process with the shortest remaining burst time is selected.</li>
+                        <li>If visual mode is active, the UI highlights the currently executing process.</li>
+                        <li>If the selected process is starting for the first time, its response time is calculated.</li>
+                        <li>The selected process runs for one time unit; its remaining time is decreased.</li>
+                        <li>If a process finishes (remaining time becomes 0), its turnaround and waiting times are calculated.</li>
+                        <li>Execution is logged in the Gantt chart at each time unit.</li>
+                        <li>After all processes finish, average turnaround, waiting, and response times are computed.</li>
                     </ol>
                 </div>
 
@@ -625,13 +625,15 @@
                     <!-- Initial View of the Code -->
                     <div class="code-container">
                         <pre id="code-snippet">
-async function SJFNonPre(flag) {
+async function SJFPre(flag) {
     readyQueueInit();
     let min = Number.MAX_VALUE;
     let p;
-    let turnAroundSJFNonPre = [];
-    let waitingSJFNonPre = [];
+    let turnAroundSJFPre = [];
+    let waitingSJFPre = [];
+    let responseSJFPre = [];
     let processQueue = [];
+    let completionTime = [];
     let time = 0;
     if (flag) {
         $("#wq").attr("hidden", true)
@@ -647,22 +649,22 @@ async function SJFNonPre(flag) {
         }
 
         if (processQueue.length === 0) {
-            if (ganttSJFNonPre.length > 0 && ganttSJFNonPre[ganttSJFNonPre.length - 1].processId != null) {
-                ganttSJFNonPre[ganttSJFNonPre.length - 1].endTime = time;
-                ganttSJFNonPre.push({
+            if (ganttSJFPre.length > 0 && ganttSJFPre[ganttSJFPre.length - 1].processId != null) {
+                ganttSJFPre[ganttSJFPre.length - 1].endTime = time;
+                ganttSJFPre.push({
                     processId: null,
                     startTime: time,
                     endTime: time + 1
                 });
-            } else if (ganttSJFNonPre.length == 0) {
-                ganttSJFNonPre.push({
+            } else if (ganttSJFPre.length == 0) {
+                ganttSJFPre.push({
                     processId: null,
                     startTime: time,
                     endTime: time + 1
                 });
             }
             time++;
-            continue outer;
+            continue;
         }
         min = Number.MAX_VALUE;
         let vis_block = ""
@@ -674,7 +676,7 @@ async function SJFNonPre(flag) {
             }
         }
         if (flag) {
-            $("#vis_name").empty().append("SJF (non pre)")
+            $("#vis_name").empty().append("SJF (pre)")
             $("#vis_rq").empty().html(vis_block)
             $("#vis_cpu").empty().html(`<span class='fitem'>P${processQueue[p].id}</span>`)
             $("#vis_time").empty().append(time)
@@ -684,28 +686,48 @@ async function SJFNonPre(flag) {
                 break outer;
         }
         prev_time = time;
-        time += processQueue[p].burst_time;
-        if (ganttSJFNonPre.length > 0)
-            ganttSJFNonPre[ganttSJFNonPre.length - 1].endTime = prev_time;
-        ganttSJFNonPre.push({
-            processId: processQueue[p].id,
-            startTime: prev_time,
-            endTime: time
-        });
-        turnAroundSJFNonPre[processQueue[p].id] = time - processQueue[p].arrival_time;
-        waitingSJFNonPre[processQueue[p].id] = turnAroundSJFNonPre[processQueue[p].id] - processQueue[p].burst_time;
-        for (pro in readyQueue) {
-            if (readyQueue[pro].id === processQueue[p].id)
-                readyQueue.splice(pro, 1);
+        time++;
+        if (ganttSJFPre.length > 0 && ganttSJFPre[ganttSJFPre.length - 1].processId != processQueue[p].id) {
+            ganttSJFPre[ganttSJFPre.length - 1].endTime = prev_time;
+            ganttSJFPre.push({
+                processId: processQueue[p].id,
+                startTime: prev_time,
+                endTime: time
+            });
+        } else if (ganttSJFPre.length == 0) {
+            ganttSJFPre.push({
+                processId: processQueue[p].id,
+                startTime: prev_time,
+                endTime: time
+            });
         }
-        processQueue.splice(0, processQueue.length);
+        if (processQueue[p].burst_time === getProcessById(processQueue[p].id).burst_time) {
+            //It means came for the first time
+            responseSJFPre[processQueue[p].id] = prev_time - processQueue[p].arrival_time;
+        }
+        processQueue[p].burst_time--;
+        if (processQueue[p].burst_time == 0) {
+            completionTime[processQueue[p].id] = time;
+            for (let process in readyQueue) {
+                if (readyQueue[process].id == processQueue[p].id) {
+                    readyQueue.splice(process, 1);
+                }
+            }
+        }
+        processQueue.splice(p, processQueue.length);
     }
     $(".btn").removeAttr("disabled")
     stop_flag = false;
-    completionTimeSJF = time;
-    avgTurnaroundTimeSJFNonPre = calculateAvgTime(turnAroundSJFNonPre);
-    avgWaitingTimeSJFNonPre = calculateAvgTime(waitingSJFNonPre);
-    avgResponseTimeSJFNonPre = avgWaitingTimeSJFNonPre;
+    for (p in processes) {
+        turnAroundSJFPre[processes[p].id] = completionTime[processes[p].id] - processes[p].arrival_time;
+        waitingSJFPre[processes[p].id] = turnAroundSJFPre[processes[p].id] - processes[p].burst_time;
+    }
+    if (ganttSJFPre.length > 0)
+        ganttSJFPre[ganttSJFPre.length - 1].endTime = time;
+    completionTimeSJFPre = time;
+    avgTurnaroundTimeSJFPre = calculateAvgTime(turnAroundSJFPre);
+    avgWaitingTimeSJFPre = calculateAvgTime(waitingSJFPre);
+    avgResponseTimeSJFPre = calculateAvgTime(responseSJFPre);
 }
 
                         </pre>
@@ -828,7 +850,7 @@ async function SJFNonPre(flag) {
         <div class="content-container">
             <!-- Video Section -->
             <div class="video-section">
-                <h2 class="title">SJFNonPre Scheduling Algorithm Demonstration</h2>
+                <h2 class="title">SJFPre Scheduling Algorithm Demonstration</h2>
                 <p class="intro-text">
                     The <span class="process-table-link" id="processTableLink">Process Table</span> values used here are consistent with those provided in the About section of this documentation. 
                 </p>
