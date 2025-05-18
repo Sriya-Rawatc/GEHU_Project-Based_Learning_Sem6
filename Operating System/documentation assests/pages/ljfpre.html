@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LJF pre scheduling algorithm </title>
+    <style>
+        /* Base Styles */
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --accent-primary: #8e44ad;
+            --accent-secondary: #3498db;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --card-bg: rgba(30, 30, 30, 0.7);
+            --gradient-1: linear-gradient(135deg, #8e44ad, #3498db);
+            --gradient-2: linear-gradient(135deg, #3498db, #2ecc71);
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            background: radial-gradient(circle at 10% 20%, rgb(21, 21, 21) 0%, rgb(5, 5, 5) 90.2%);
+        }
+
+        /* Animated Background */
+        .tech-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+            overflow: hidden;
+        }
+
+        .tech-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 5px,
+                rgba(86, 61, 124, 0.05) 5px,
+                rgba(86, 61, 124, 0.05) 10px
+            );
+        }
+
+        .tech-background .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: var(--accent-secondary);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 15s infinite linear;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 1.5rem;
+            background: rgba(18, 18, 18, 0.95);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link1 {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link1::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link1:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link1:hover::after {
+            width: 100%;
+        }
+
+        .nav-link1.active {
+            color: var(--text-primary);
+        }
+
+        .nav-link1.active::after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        main {
+            padding: 8rem 2rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: var(--gradient-1);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 1s ease;
+        }
+
+        /* Two Column Layout */
+        .two-column-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Heading Styles */
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-1);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-secondary);
+        }
+
+        /* Text Styles */
+        p {
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        /* Code Section */
+        .code-section {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .code-section pre {
+            font-family: 'Courier New', Courier, monospace;
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+
+        .code-section code {
+            color: #e0e0e0;
+        }
+
+        .code-title {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            background: var(--gradient-1);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Video Container */
+        .video-container {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Gantt Chart */
+        .gantt-chart {
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .gantt-chart svg {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: var(--shadow);
+            margin: 1rem 0.5rem 1rem 0;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Image Styles */
+        .image-container {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .copyright {
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            100% {
+                transform: translateY(0) translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(52, 152, 219, 0.8), 0 0 30px rgba(142, 68, 173, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+            }
+        }
+
+        /* Media Queries */
+        @media screen and (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .two-column-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tech Background -->
+    <div class="tech-background" id="tech-bg"></div>
+
+    <div>
+    <!-- Your existing desktop nav -->
+    <nav id="custom-navbar">
+        <a href="./CodeBrain_Page.html" class="custom-logo">CodeBrain</a>
+        <div class="custom-nav-links" id="custom-nav-links">
+            <a href="/Operating System/CodeBrain_Page.html" class="custom-nav-link">About</a>
+            <a href="./documentation assests/pages/fcfs.html" class="custom-nav-link ">FCFS</a>
+            <a href="/Operating System/documentation assests/pages/sjf.html" class="custom-nav-link ">SJF</a>
+            <a href="/Operating System/documentation assests/pages/sjfpre.html" class="custom-nav-link">SJF(Preemptive)</a>
+            <a href="/Operating System/documentation assests/pages/ljf.html" class="custom-nav-link">LJF</a>
+            <a href="/Operating System/documentation assests/pages/ljfpre.html active" class="custom-nav-link">LJF(Preemptive)</a>
+            <a href="/Operating System/documentation assests/pages/prior.html" class="custom-nav-link">Priority</a>
+            <a href="/Operating System/documentation assests/pages/priorpre.html" class="custom-nav-link">Priority(Preemptive)</a>
+            <a href="/Operating System/documentation assests/pages/round.html" class="custom-nav-link">Round Robin</a>
+            <a href="/Operating System/documentation assests/pages/proposed.html" class="custom-nav-link">Proposed</a>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <div class="custom-menu-toggle" onclick="toggleCustomDrawer(this)">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="custom-drawer" id="custom-drawer">
+        <a href="/Operating System/CodeBrain_Page.html" class="custom-drawer-link">About</a>
+        <a href="./documentation assests/pages/fcfs.html" class="custom-drawer-link">FCFS</a>
+        <a href="/Operating System/documentation assests/pages/sjf.html" class="custom-drawer-link">SJF</a>
+        <a href="/Operating System/documentation assests/pages/sjfpre.html" class="custom-drawer-link">SJF(Preemptive)</a>
+        <a href="/Operating System/documentation assests/pages/ljf.html" class="custom-drawer-link">LJF</a>
+        <a href="/Operating System/documentation assests/pages/ljfpre.html" class="custom-drawer-link active">LJF(Preemptive)</a>
+        <a href="/Operating System/documentation assests/pages/prior.html" class="custom-drawer-link">Priority</a>
+        <a href="/Operating System/documentation assests/pages/priorpre.html" class="custom-drawer-link">Priority(Preemptive)</a>
+        <a href="/Operating System/documentation assests/pages/round.html" class="custom-drawer-link">Round Robin</a>
+        <a href="/Operating System/documentation assests/pages/proposed.html" class="custom-drawer-link">Proposed</a>
+    </div>
+
+    <!-- Style and Script -->
+    <style>
+        /* Base Styles */
+        #custom-navbar {
+        background-color: #0e0e0e;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 25px;
+        position: relative;
+        z-index: 1000;
+        }
+
+        .custom-logo {
+        font-size: 26px;
+        font-weight: bold;
+        color: #00ffd5;
+        text-decoration: none;
+        }
+
+        .custom-nav-links {
+        display: flex;
+        gap: 15px;
+        }
+
+        .custom-nav-link {
+        color: white;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        transition: background 0.3s;
+        }
+
+        .custom-nav-link:hover,
+        .custom-nav-link.active {
+        background: #00ffd5;
+        color: #000;
+        }
+
+        .custom-menu-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        }
+
+        .custom-menu-toggle span {
+        height: 3px;
+        width: 25px;
+        background: #00ffd5;
+        border-radius: 2px;
+        transition: 0.3s;
+        }
+
+        /* Drawer menu */
+        .custom-drawer {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 240px;
+        height: 100%;
+        background-color: #121212;
+        display: flex;
+        flex-direction: column;
+        padding-top: 70px;
+        transition: right 0.4s ease;
+        z-index: 999;
+        }
+
+        .custom-drawer.show {
+        right: 0;
+        }
+
+        .custom-drawer-link {
+        padding: 16px 20px;
+        text-decoration: none;
+        color: white;
+        font-size: 16px;
+        border-bottom: 1px solid #222;
+        transition: background 0.3s;
+        }
+
+        .custom-drawer-link:hover,
+        .custom-drawer-link.active {
+        background: #00ffd5;
+        color: #000;
+        }
+
+        /* Mobile view adjustments */
+        @media (max-width: 768px) {
+        .custom-nav-links {
+            display: none;
+        }
+
+        .custom-menu-toggle {
+            display: flex;
+        }
+        }
+
+        /* Toggle to X */
+        .custom-menu-toggle.open span:nth-child(1) {
+        transform: rotate(45deg) translateY(10px);
+        }
+
+        .custom-menu-toggle.open span:nth-child(2) {
+        opacity: 0;
+        }
+
+        .custom-menu-toggle.open span:nth-child(3) {
+        transform: rotate(-45deg) translateY(-10px);
+        }
+    </style>
+
+    <script>
+        function toggleCustomDrawer(btn) {
+        const drawer = document.getElementById('custom-drawer');
+        drawer.classList.toggle('show');
+        btn.classList.toggle('open');
+        }
+    </script>
+    </div>
+
+
+    <!-- Main Content -->
+    <main>
+        <h1 class="page-title">LJFPre (Longest Job First Non Preamptive) Scheduling</h1>
+
+        <div class="two-column-layout">
+            <div class="card">
+                <h1>Definition:</h1>
+                <p>Longest Job First (LJF) Preemptive Scheduling selects the process with the longest remaining burst time and allows it to be preempted if a newly arrived process has a longer burst time.</p>
+                <h3>Why LJF Preamptive?</h3>
+                <ul>
+                    <li>Allows dynamic handling of longer processes by giving them priority</li>
+                    <li>Can maximize CPU usage when longer processes dominate</li>
+                    <li>More flexible than the non-preemptive version in responding to new arrivals</li>
+                </ul>
+                <a href="https://www.sciencedirect.com/topics/computer-science/first-come-first-served">
+                    <div class="btn">Learn More</div>
+                </a>
+
+                <div style="padding: 1.5rem; background-color: #f4f6f8; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); font-family: Arial, sans-serif; color: #333;">
+                    <h2 style="margin-bottom: 1rem; font-size: 1.6rem; color: #222;">SJFPre Scheduling Code Explanation</h2>
+                    <ol style="padding-left: 1.2rem; line-height: 1.6;">
+                        <li>Initializes the ready queue and sets the initial simulation time to 0.</li>
+                        <li>Creates arrays to store turnaround, waiting, and response times.</li>
+                        <li>If visual mode is enabled, UI elements are prepared for animation.</li>
+                        <li>The main loop runs until all processes are completed (ready queue is empty and no process is left).</li>
+                        <li>At each time unit, processes that have arrived are added to the ready queue.</li>
+                        <li>If no process is ready, idle time is recorded in the Gantt chart and time is incremented.</li>
+                        <li>From the ready queue, the process with the longest remaining burst time is selected.</li>
+                        <li>If visual mode is active, the UI highlights the currently executing process.</li>
+                        <li>If the selected process is starting for the first time, its response time is recorded.</li>
+                        <li>The selected process runs for one time unit; its remaining time is decreased.</li>
+                        <li>If a process finishes (remaining time becomes 0), its turnaround and waiting times are calculated.</li>
+                        <li>Execution is logged in the Gantt chart at each time unit.</li>
+                        <li>After all processes finish, average turnaround, waiting, and response times are calculated.</li>
+                    </ol>
+                </div>
+
+            </div>
+            
+            <div class="card">
+                <h2>Source Code</h2>
+                
+                <div class="code-section">
+                    <div class="code-title">Code Used</div>
+                    
+                    <!-- Initial View of the Code -->
+                    <div class="code-container">
+                        <pre id="code-snippet">
+
+async function LJFPre(flag) {
+    readyQueueInit();
+    let max = Number.MIN_VALUE;
+    let p;
+    let turnAroundLJFPre = [];
+    let waitingLJFPre = [];
+    let responseLJFPre = [];
+    let processQueue = [];
+    let completionTime = [];
+    let time = 0;
+    if (flag) {
+        $("#wq").attr("hidden", true)
+        $("#vis").removeAttr("hidden");
+        $('html, body').animate({
+            scrollTop: $("#vis").offset().top
+        }, 0);
+    }
+    outer: while (readyQueue.length != 0) {
+        for (let process in readyQueue) {
+            if (readyQueue[process].arrival_time <= time)
+                processQueue.push(readyQueue[process]);
+        }
+
+        if (processQueue.length === 0) {
+            if (ganttLJFPre.length > 0 && ganttLJFPre[ganttLJFPre.length - 1].processId != null) {
+                ganttLJFPre[ganttLJFPre.length - 1].endTime = time;
+                ganttLJFPre.push({
+                    processId: null,
+                    startTime: time,
+                    endTime: time + 1
+                });
+            } else if (ganttLJFPre.length == 0) {
+                ganttLJFPre.push({
+                    processId: null,
+                    startTime: time,
+                    endTime: time + 1
+                });
+            }
+            time++;
+            continue;
+        }
+        max = Number.MIN_VALUE;
+        let vis_block = ""
+        for (let process in processQueue) {
+            vis_block += `<span class='fitem'>P${processQueue[process].id}</span>`
+            if (processQueue[process].burst_time > max) {
+                max = processQueue[process].burst_time;
+                p = process;
+            }
+        }
+        if (flag) {
+            $("#vis_name").empty().append("LJF (pre)")
+            $("#vis_rq").empty().html(vis_block)
+            $("#vis_cpu").empty().html(`<span class='fitem'>P${processQueue[p].id}</span>`)
+            $("#vis_time").empty().append(time)
+            $(".btn").attr("disabled", true)
+            await new Promise(r => setTimeout(r, 2000));
+            if (stop_flag)
+                break outer;
+        }
+        prev_time = time;
+        time++;
+        if (ganttLJFPre.length > 0 && ganttLJFPre[ganttLJFPre.length - 1].processId != processQueue[p].id) {
+            ganttLJFPre[ganttLJFPre.length - 1].endTime = prev_time;
+            ganttLJFPre.push({
+                processId: processQueue[p].id,
+                startTime: prev_time,
+                endTime: time
+            });
+        } else if (ganttLJFPre.length == 0) {
+            ganttLJFPre.push({
+                processId: processQueue[p].id,
+                startTime: prev_time,
+                endTime: time
+            });
+        }
+        if (processQueue[p].burst_time === getProcessById(processQueue[p].id).burst_time) {
+            //It means came for the first time
+            responseLJFPre[processQueue[p].id] = prev_time - processQueue[p].arrival_time;
+        }
+        processQueue[p].burst_time--;
+        if (processQueue[p].burst_time == 0) {
+            completionTime[processQueue[p].id] = time;
+            for (let process in readyQueue) {
+                if (readyQueue[process].id == processQueue[p].id) {
+                    readyQueue.splice(process, 1);
+                }
+            }
+        }
+        processQueue.splice(p, processQueue.length);
+    }
+    $(".btn").removeAttr("disabled")
+    stop_flag = false;
+    for (p in processes) {
+        turnAroundLJFPre[processes[p].id] = completionTime[processes[p].id] - processes[p].arrival_time;
+        waitingLJFPre[processes[p].id] = turnAroundLJFPre[processes[p].id] - processes[p].burst_time;
+    }
+    if (ganttLJFPre.length > 0)
+        ganttLJFPre[ganttLJFPre.length - 1].endTime = time;
+    completionTimeLJFPre = time;
+    avgTurnaroundTimeLJFPre = calculateAvgTime(turnAroundLJFPre);
+    avgWaitingTimeLJFPre = calculateAvgTime(waitingLJFPre);
+    avgResponseTimeLJFPre = calculateAvgTime(responseLJFPre);
+}
+                        </pre>
+                    </div>
+                    
+                    <!-- View More Button -->
+                    <button id="view-more-btn" class="view-more-btn">View More</button>
+                </div>
+
+                <!-- Styling & Script Inside the Same Div -->
+                <div style="display: none;">
+                    <style>
+                        .code-section {
+                            width: 100%;
+                            margin-top: 20px;
+                            background-color: #f4f4f4;
+                            padding: 20px;
+                            border-radius: 8px;
+                            font-family: 'Courier New', monospace;
+                            transition: all 0.3s ease;
+                            position: relative;
+                        }
+
+                        .code-container pre {
+                            white-space: pre-wrap;
+                            word-wrap: break-word;
+                            font-size: 14px;
+                            color: #f8f8f2;
+                            background-color: #282c34;
+                            padding: 20px;
+                            border-radius: 5px;
+                            line-height: 1.5;
+                            margin-bottom: 10px;
+                            overflow: hidden;
+                            transition: all 0.5s ease-out;
+                            max-height: 150px; /* Initially limit height */
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                        }
+
+                        .code-container pre.expanded {
+                            max-height: 1000px; /* Full height when expanded */
+                            overflow-y: auto; /* Enable vertical scrolling */
+                            transition: all 0.5s ease-out;
+                        }
+
+                        /* Scrollbar styles */
+                        .code-container pre::-webkit-scrollbar {
+                            width: 8px;
+                        }
+
+                        .code-container pre::-webkit-scrollbar-thumb {
+                            background: #888;
+                            border-radius: 4px;
+                        }
+
+                        .code-container pre::-webkit-scrollbar-thumb:hover {
+                            background: #555;
+                        }
+
+                        .view-more-btn {
+                            margin-top: 10px;
+                            padding: 10px 20px;
+                            font-size: 16px;
+                            background-color: #007bff;
+                            color: white;
+                            border: none;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            transition: background-color 0.3s ease, transform 0.3s ease;
+                            position: absolute;
+                            bottom: 20px; /* Always position at the bottom */
+                            left: 50%;
+                            transform: translateX(-50%);
+                            z-index: 10; /* Ensure button is above other elements */
+                        }
+
+                        .view-more-btn:hover {
+                            background-color: #0056b3;
+                        }
+
+                        /* Prevent the button from being hidden under content */
+                        .code-section.expanded .view-more-btn {
+                            position: absolute;
+                            bottom: 20px;
+                        }
+                    </style>
+
+                    <script>
+                        // Handle the "View More" button click
+                        document.getElementById("view-more-btn").addEventListener("click", function() {
+                            const codeSnippet = document.getElementById("code-snippet");
+                            const button = document.getElementById("view-more-btn");
+                            const codeSection = document.querySelector('.code-section');
+
+                            // Toggle the expanded state of the code block
+                            codeSnippet.classList.toggle("expanded");
+                            codeSection.classList.toggle("expanded");
+
+                            // Change button text based on whether the code is expanded or not
+                            if (codeSnippet.classList.contains("expanded")) {
+                                button.textContent = "View Less";
+                            } else {
+                                button.textContent = "View More";
+                            }
+
+                            // Scroll smoothly to the code block when expanded
+                            if (codeSnippet.classList.contains("expanded")) {
+                                // Scroll the page to the code section when expanded
+                                codeSnippet.scrollIntoView({behavior: "smooth", block: "center"});
+                            }
+                        });
+                    </script>
+                </div>
+
+                
+                <p>This code, written in JavaScript, powers the scheduler visualization seen on our project website, providing an interactive representation of the scheduling algorithms.</p>
+            </div>
+        </div>
+        
+        <div class="content-container">
+            <!-- Video Section -->
+            <div class="video-section">
+                <h2 class="title">LJFPre Scheduling Algorithm Demonstration</h2>
+                <p class="intro-text">
+                    The <span class="process-table-link" id="processTableLink">Process Table</span> values used here are consistent with those provided in the About section of this documentation. 
+                </p>
+                
+                <!-- Video embedded to play continuously -->
+                <div class="video-wrapper">
+                    <iframe src="/Operating System/documentation assests/videos/FCFS.mp4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loop muted></iframe>
+                </div>
+            </div>
+
+            <!-- Image Popup Modal -->
+            <div id="imagePopup" class="popup" onclick="closeImagePopup(event)">
+                <div class="popup-content-wrapper">
+                    <span class="popup-close" onclick="closeImagePopup()">&times;</span>
+                    <img src="/Operating System/documentation assests/images/Table.png" alt="Process Table" class="popup-content">
+                </div>
+            </div>
+
+            <style>
+                /* General Layout */
+                .content-container {
+                    width: 100%;
+                    padding: 20px;
+                    box-sizing: border-box;
+                    font-family: Arial, sans-serif;
+                    background-color: #121212; /* Dark background for black-themed website */
+                    color: #e1e1e1; /* Light text color for contrast */
+                }
+
+                /* Video Section */
+                .video-section {
+                    text-align: center;
+                    margin-bottom: 30px;
+                    background-color: #1e1e1e; /* Slightly darker background for the video section */
+                    padding: 20px;
+                    border-radius: 8px;
+                }
+
+                .video-wrapper iframe {
+                    width: 100%;
+                    max-width: 800px;
+                    height: 450px;
+                    border-radius: 8px;
+                }
+
+                .intro-text {
+                    font-size: 16px;
+                    color: #dcdcdc;
+                    margin-top: 10px;
+                    font-weight: 500;
+                }
+
+                .process-table-link {
+                    color: #007BFF;
+                    cursor: pointer;
+                    text-decoration: underline;
+                    font-weight: bold;
+                }
+
+                .process-table-link:hover {
+                    text-decoration: none;
+                    color: #0056b3; /* Darker blue when hovered */
+                }
+
+                /* Popup Modal Styles */
+                .popup {
+                    display: none;
+                    position: fixed;
+                    z-index: 1;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.7);
+                    overflow: auto;
+                    justify-content: center;
+                    align-items: center;
+                    transition: all 0.3s ease;
+                }
+
+                .popup-content-wrapper {
+                    position: relative;
+                    max-width: 90%;
+                    max-height: 80%;
+                    margin: 0 auto;
+                    background-color: #333;
+                    border-radius: 8px;
+                    padding: 20px;
+                }
+
+                .popup-content {
+                    display: block;
+                    width: 100%;
+                    height: auto;
+                    border-radius: 10px;
+                }
+
+                .popup-close {
+                    position: absolute;
+                    top: 10px;
+                    right: 20px;
+                    color: #fff;
+                    font-size: 40px;
+                    font-weight: bold;
+                    cursor: pointer;
+                }
+
+                .popup-close:hover {
+                    color: #ddd;
+                }
+
+            </style>
+
+            <script>
+                // Function to show the popup when right-clicking the "Process Table" link
+                document.getElementById('processTableLink').addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent the default right-click menu
+                    document.getElementById('imagePopup').style.display = 'flex'; // Show the image popup
+                });
+
+                // Function to close the popup when clicking outside or pressing Escape
+                function closeImagePopup(event) {
+                    // Close popup when clicking outside of the image or pressing Esc
+                    if (event.target === document.getElementById('imagePopup') || event.key === 'Escape') {
+                        document.getElementById('imagePopup').style.display = 'none';
+                    }
+                }
+
+                // Event listener for closing the popup with the Esc key
+                document.addEventListener('keydown', function(event) {
+                    if (event.key === 'Escape') {
+                        closeImagePopup(event);
+                    }
+                });
+            </script>
+        </div>
+
+        <div class="gantt-chart-container">
+    <style>
+        /* Gantt Chart Container Styling */
+        .gantt-chart-container {
+            background-color: #1e1e1e; /* Darker black theme for the container */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+            margin: 40px auto;
+            width: 90%;
+            max-width: 1200px;
+            text-align: center;
+            position: relative;
+            overflow: hidden; /* Prevent overflow for zoom effect */
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        /* Heading Styling */
+        .chart-heading {
+            color: #f39c12; /* Gold color for the heading */
+            font-size: 3rem;
+            margin-bottom: 30px;
+            font-family: 'Arial', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        /* Gantt Chart Image Container Styling */
+        .gantt-image-container {
+            position: relative;
+            width: auto;
+            height: auto; /* Fixed height for the container */
+            align-content: center;
+            background: #000;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Gantt Chart Image Styling */
+        .gantt-image {
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+            object-fit: cover; /* Adjusts image to fill container while maintaining aspect ratio */
+            border-radius: 15px;
+            transition: transform 0.6s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        /* Hover Animation Effect on the Gantt Chart Image */
+        .gantt-image-container:hover .gantt-image {
+            transform: scale(1.1); /* Slight zoom effect */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8); /* Shadow effect on hover */
+        }
+
+        /* Hover Effect on Image Container */
+        .gantt-image-container:hover {
+            cursor: pointer;
+            transform: scale(1.0); /* Slight scale effect on hover for the container */
+        }
+
+        /* Fade-in Animation for Gantt Chart Container */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll-in effect for image */
+        .gantt-image-container img {
+            animation: fadeInImage 0.5s ease-in-out;
+        }
+
+        @keyframes fadeInImage {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design for Smaller Screens */
+        @media (max-width: 768px) {
+            .gantt-chart-container {
+                padding: 20px;
+            }
+
+            .chart-heading {
+                font-size: 2.5rem;
+            }
+
+            .gantt-image-container {
+                height: 300px; /* Reduced height for smaller screens */
+            }
+
+            .gantt-image {
+                width: 100%;
+                object-fit: cover;
+            }
+        }
+    </style>
+
+    <div class="gantt-chart">
+        <h2 class="chart-heading">Gantt Chart</h2>
+        <div class="gantt-image-container">
+            <!-- Replace with your actual image path -->
+            <img class="gantt-image" src="/Operating System/documentation assests/images/FCFS Gantt Chart.png" alt="Gantt Chart" />
+        </div>
+    </div>
+</div>
+
+
+    <footer>
+        <div class="footer-content">
+            <div class="logo">CodeBrain</div>
+            <p class="copyright">© 2025 CodeBrain Simulator Team. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Create animated background
+        document.addEventListener('DOMContentLoaded', function() {
+            const techBg = document.getElementById('tech-bg');
+            
+            // Create particles
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random position
+                const posX = Math.floor(Math.random() * window.innerWidth);
+                const posY = Math.floor(Math.random() * window.innerHeight);
+                
+                // Random size
+                const size = Math.floor(Math.random() * 3) + 1;
+                
+                // Set styles
+                particle.style.left = posX + 'px';
+                particle.style.top = posY + 'px';
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // Random animation duration
+                const duration = Math.floor(Math.random() * 20) + 10;
+                particle.style.animationDuration = duration + 's';
+                
+                techBg.appendChild(particle);
+            }
+
+            // Navbar scroll effect
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // Hover effects for elements
+            const cards = document.querySelectorAll('.card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mousemove', function(e) {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const xc = rect.width / 2;
+                    const yc = rect.height / 2;
+                    
+                    const dx = x - xc;
+                    const dy = y - yc;
+                    
+                    card.style.transform = `perspective(1000px) rotateY(${dx / 50}deg) rotateX(${-dy / 50}deg) translateY(-5px)`;
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    card.style.transform = 'perspective(1000px) rotateY(0) rotateX(0) translateY(0)';
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.3s ease';
+                    }, 100);
+                });
+            });
+
+            // Smooth scrolling for navigation
+            const navLinks = document.querySelectorAll('.nav-link1');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Add animation for page changes
+                    document.body.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        document.body.style.opacity = '1';
+                    }, 300);
+                    
+                    // Update active link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Add scroll reveal for sections
+            const sections = document.querySelectorAll('section, .card, .video-container, .gantt-chart');
+            
+            const sectionObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(50px)';
+                section.style.transition = 'all 0.7s ease';
+                sectionObserver.observe(section);
+            });
+
+            // Add cursor trail effect
+            const cursorTrail = document.createElement('div');
+            cursorTrail.style.position = 'fixed';
+            cursorTrail.style.width = '5px';
+            cursorTrail.style.height = '5px';
+            cursorTrail.style.borderRadius = '50%';
+            cursorTrail.style.backgroundColor = 'rgba(142, 68, 173, 0.5)';
+            cursorTrail.style.pointerEvents = 'none';
+            cursorTrail.style.zIndex = '9999';
+            cursorTrail.style.transition = 'transform 0.1s ease';
+            cursorTrail.style.boxShadow = '0 0 10px rgba(142, 68, 173, 0.8)';
+            document.body.appendChild(cursorTrail);
+            
+            document.addEventListener('mousemove', function(e) {
+                cursorTrail.style.left = e.clientX + 'px';
+                cursorTrail.style.top = e.clientY + 'px';
+            });
+            
+            // Add glow effect to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.animation = 'glow 1.5s infinite';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.animation = '';
+                });
+            });
+            
+            // Animated typing effect for page title
+            const pageTitle = document.querySelector('.page-title');
+            const titleText = pageTitle.textContent;
+            pageTitle.textContent = '';
+            
+            let i = 0;
+            const typeWriter = () => {
+                if (i < titleText.length) {
+                    pageTitle.textContent += titleText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                }
+            };
+            
+            typeWriter();
+        });
+    </script>
+</body>
+</html>
