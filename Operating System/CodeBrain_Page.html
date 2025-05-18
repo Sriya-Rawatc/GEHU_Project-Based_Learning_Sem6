@@ -108,7 +108,7 @@
             gap: 2rem;
         }
 
-        .nav-link {
+        .nav-link1 {
             text-decoration: none;
             color: var(--text-secondary);
             font-weight: 500;
@@ -116,7 +116,7 @@
             transition: all 0.3s ease;
         }
 
-        .nav-link::after {
+        .nav-link1::after {
             content: '';
             position: absolute;
             bottom: -5px;
@@ -127,19 +127,19 @@
             transition: width 0.3s ease;
         }
 
-        .nav-link:hover {
+        .nav-link1:hover {
             color: var(--text-primary);
         }
 
-        .nav-link:hover::after {
+        .nav-link1:hover::after {
             width: 100%;
         }
 
-        .nav-link.active {
+        .nav-link1.active {
             color: var(--text-primary);
         }
 
-        .nav-link.active::after {
+        .nav-link1.active::after {
             width: 100%;
         }
 
@@ -571,18 +571,18 @@
 
     <!-- Navigation -->
     <nav id="navbar">
-        <a href="#" class="logo">CodeBrain</a>
+        <a href="./CodeBrain_Page.html" class="logo">CodeBrain</a>
         <div class="nav-links">
-            <a href="#" class="nav-link active">About</a>
-            <a href="./documentation%20assests/pages/FCFS.html" class="nav-link">FCFS</a>
-            <a href="#" class="nav-link">SJF</a>
-            <a href="#" class="nav-link">SJF(Preemptive)</a>
-            <a href="#" class="nav-link">LJF</a>
-            <a href="#" class="nav-link">LJF(Preemptive)</a>
-            <a href="#" class="nav-link">Priority</a>
-            <a href="#" class="nav-link">Priority(Preemptive)</a>
-            <a href="#" class="nav-link">Round Robin</a>
-            <a href="#" class="nav-link">Proposed</a>
+            <a href="#" class="nav-link1 active">About</a>
+            <a href="./documentation assests/pages/fcfs.html" class="nav-link1">FCFS</a>
+            <a href="#" class="nav-link1">SJF</a>
+            <a href="#" class="nav-link1">SJF(Preemptive)</a>
+            <a href="#" class="nav-link1">LJF</a>
+            <a href="#" class="nav-link1">LJF(Preemptive)</a>
+            <a href="#" class="nav-link1">Priority</a>
+            <a href="#" class="nav-link1">Priority(Preemptive)</a>
+            <a href="#" class="nav-link1">Round Robin</a>
+            <a href="#" class="nav-link1">Proposed</a>
         </div>
     </nav>
 
@@ -894,11 +894,10 @@
             });
 
             // Smooth scrolling for navigation
-            const navLinks = document.querySelectorAll('.nav-link');
+            const navLinks = document.querySelectorAll('.nav-link1');
             
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
-                    e.preventDefault();
                     
                     // Add animation for page changes
                     document.body.style.opacity = '0';
