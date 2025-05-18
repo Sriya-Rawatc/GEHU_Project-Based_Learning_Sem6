@@ -1,62 +1,63 @@
-var processes = [{
+var processes = [
+    {
         id: 1,
-        burst_time: 80,
+        burst_time: 30,
         arrival_time: 0,
-        priority: 1
+        priority: 3
     },
     {
         id: 2,
-        burst_time: 60,
-        arrival_time: 20,
+        burst_time: 40,
+        arrival_time: 10,
         priority: 2
     },
     {
         id: 3,
-        burst_time: 65,
-        arrival_time: 40,
-        priority: 3
-    },
-    {
-        id: 4,
-        burst_time: 120,
-        arrival_time: 60,
+        burst_time: 50,
+        arrival_time: 20,
         priority: 4
     },
     {
+        id: 4,
+        burst_time: 20,
+        arrival_time: 30,
+        priority: 1
+    },
+    {
         id: 5,
-        burst_time: 30,
-        arrival_time: 80,
+        burst_time: 60,
+        arrival_time: 40,
         priority: 5
     },
     {
         id: 6,
-        burst_time: 90,
-        arrival_time: 90,
-        priority: 6
+        burst_time: 30,
+        arrival_time: 50,
+        priority: 3
     },
     {
         id: 7,
-        burst_time: 25,
-        arrival_time: 120,
-        priority: 7
+        burst_time: 80,
+        arrival_time: 60,
+        priority: 6
     },
     {
         id: 8,
-        burst_time: 40,
-        arrival_time: 240,
-        priority: 8
+        burst_time: 10,
+        arrival_time: 70,
+        priority: 2
     },
     {
         id: 9,
         burst_time: 90,
-        arrival_time: 260,
-        priority: 9
+        arrival_time: 80,
+        priority: 4
     },
     {
         id: 10,
-        burst_time: 75,
-        arrival_time: 380,
-        priority: 10
+        burst_time: 40,
+        arrival_time: 100,
+        priority: 1
     }
 ];
 
