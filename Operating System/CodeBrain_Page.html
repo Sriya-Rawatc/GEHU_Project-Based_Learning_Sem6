@@ -569,21 +569,168 @@
     <div class="tech-background" id="tech-bg"></div>
 
     <!-- Navigation -->
-    <nav id="navbar">
-        <a href="./CodeBrain_Page.html" class="logo">CodeBrain</a>
-        <div class="nav-links">
-            <a href="#" class="nav-link1 active">About</a>
-            <a href="./documentation assests/pages/fcfs.html" class="nav-link1">FCFS</a>
-            <a href="#" class="nav-link1">SJF</a>
-            <a href="#" class="nav-link1">SJF(Preemptive)</a>
-            <a href="#" class="nav-link1">LJF</a>
-            <a href="#" class="nav-link1">LJF(Preemptive)</a>
-            <a href="#" class="nav-link1">Priority</a>
-            <a href="#" class="nav-link1">Priority(Preemptive)</a>
-            <a href="#" class="nav-link1">Round Robin</a>
-            <a href="#" class="nav-link1">Proposed</a>
+    <div>
+    <!-- Your existing desktop nav -->
+    <nav id="custom-navbar">
+        <a href="./CodeBrain_Page.html" class="custom-logo">CodeBrain</a>
+        <div class="custom-nav-links" id="custom-nav-links">
+            <a href="/Operating System/CodeBrain_Page.html" class="custom-nav-link active">About</a>
+            <a href="./documentation assests/pages/fcfs.html" class="custom-nav-link">FCFS</a>
+            <a href="#" class="custom-nav-link">SJF</a>
+            <a href="#" class="custom-nav-link">SJF(Preemptive)</a>
+            <a href="#" class="custom-nav-link">LJF</a>
+            <a href="#" class="custom-nav-link">LJF(Preemptive)</a>
+            <a href="#" class="custom-nav-link">Priority</a>
+            <a href="#" class="custom-nav-link">Priority(Preemptive)</a>
+            <a href="#" class="custom-nav-link">Round Robin</a>
+            <a href="#" class="custom-nav-link">Proposed</a>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <div class="custom-menu-toggle" onclick="toggleCustomDrawer(this)">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
     </nav>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="custom-drawer" id="custom-drawer">
+        <a href="/Operating System/CodeBrain_Page.html" class="custom-drawer-link active">About</a>
+        <a href="./documentation assests/pages/fcfs.html" class="custom-drawer-link">FCFS</a>
+        <a href="#" class="custom-drawer-link">SJF</a>
+        <a href="#" class="custom-drawer-link">SJF(Preemptive)</a>
+        <a href="#" class="custom-drawer-link">LJF</a>
+        <a href="#" class="custom-drawer-link">LJF(Preemptive)</a>
+        <a href="#" class="custom-drawer-link">Priority</a>
+        <a href="#" class="custom-drawer-link">Priority(Preemptive)</a>
+        <a href="#" class="custom-drawer-link">Round Robin</a>
+        <a href="#" class="custom-drawer-link">Proposed</a>
+    </div>
+
+    <!-- Style and Script -->
+    <style>
+        /* Base Styles */
+        #custom-navbar {
+        background-color: #0e0e0e;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 25px;
+        position: relative;
+        z-index: 1000;
+        }
+
+        .custom-logo {
+        font-size: 26px;
+        font-weight: bold;
+        color: #00ffd5;
+        text-decoration: none;
+        }
+
+        .custom-nav-links {
+        display: flex;
+        gap: 15px;
+        }
+
+        .custom-nav-link {
+        color: white;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        transition: background 0.3s;
+        }
+
+        .custom-nav-link:hover,
+        .custom-nav-link.active {
+        background: #00ffd5;
+        color: #000;
+        }
+
+        .custom-menu-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        }
+
+        .custom-menu-toggle span {
+        height: 3px;
+        width: 25px;
+        background: #00ffd5;
+        border-radius: 2px;
+        transition: 0.3s;
+        }
+
+        /* Drawer menu */
+        .custom-drawer {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 240px;
+        height: 100%;
+        background-color: #121212;
+        display: flex;
+        flex-direction: column;
+        padding-top: 70px;
+        transition: right 0.4s ease;
+        z-index: 999;
+        }
+
+        .custom-drawer.show {
+        right: 0;
+        }
+
+        .custom-drawer-link {
+        padding: 16px 20px;
+        text-decoration: none;
+        color: white;
+        font-size: 16px;
+        border-bottom: 1px solid #222;
+        transition: background 0.3s;
+        }
+
+        .custom-drawer-link:hover,
+        .custom-drawer-link.active {
+        background: #00ffd5;
+        color: #000;
+        }
+
+        /* Mobile view adjustments */
+        @media (max-width: 768px) {
+        .custom-nav-links {
+            display: none;
+        }
+
+        .custom-menu-toggle {
+            display: flex;
+        }
+        }
+
+        /* Toggle to X */
+        .custom-menu-toggle.open span:nth-child(1) {
+        transform: rotate(45deg) translateY(10px);
+        }
+
+        .custom-menu-toggle.open span:nth-child(2) {
+        opacity: 0;
+        }
+
+        .custom-menu-toggle.open span:nth-child(3) {
+        transform: rotate(-45deg) translateY(-10px);
+        }
+    </style>
+
+    <script>
+        function toggleCustomDrawer(btn) {
+        const drawer = document.getElementById('custom-drawer');
+        drawer.classList.toggle('show');
+        btn.classList.toggle('open');
+        }
+    </script>
+    </div>
+
 
     <!-- Main Content -->
     <main>
@@ -785,8 +932,8 @@
 
     <footer>
         <div class="footer-content">
-            <div class="logo">CPU Scheduler</div>
-            <p class="copyright">© 2025 CPU Scheduling Simulator Team. All rights reserved.</p>
+            <div class="logo">CodeBrain</div>
+            <p class="copyright">© 2025 CodeBrain Simulator Team. All rights reserved.</p>
         </div>
     </footer>
 
