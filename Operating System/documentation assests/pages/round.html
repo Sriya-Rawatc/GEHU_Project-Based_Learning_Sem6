@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FCFS scheduling algorithm </title>
+    <title>Round Robin scheduling algorithm </title>
     <style>
         /* Base Styles */
         :root {
@@ -419,14 +419,14 @@
         <a href="./CodeBrain_Page.html" class="custom-logo">CodeBrain</a>
         <div class="custom-nav-links" id="custom-nav-links">
             <a href="/Operating System/CodeBrain_Page.html" class="custom-nav-link">About</a>
-            <a href="./documentation assests/pages/fcfs.html" class="custom-nav-link active">FCFS</a>
-            <a href="/Operating System/documentation assests/pages/sjf.html" class="custom-nav-link">SJF</a>
+            <a href="./documentation assests/pages/fcfs.html" class="custom-nav-link ">FCFS</a>
+            <a href="/Operating System/documentation assests/pages/sjf.html" class="custom-nav-link ">SJF</a>
             <a href="/Operating System/documentation assests/pages/sjfpre.html" class="custom-nav-link">SJF(Preemptive)</a>
             <a href="/Operating System/documentation assests/pages/ljf.html" class="custom-nav-link">LJF</a>
-            <a href="/Operating System/documentation assests/pages/ljfpre.html" class="custom-nav-link">LJF(Preemptive)</a>
-            <a href="/Operating System/documentation assests/pages/prior.html" class="custom-nav-link">Priority</a>
-            <a href="/Operating System/documentation assests/pages/priorpre.html" class="custom-nav-link">Priority(Preemptive)</a>
-            <a href="/Operating System/documentation assests/pages/round.html" class="custom-nav-link">Round Robin</a>
+            <a href="/Operating System/documentation assests/pages/ljfpre.html " class="custom-nav-link">LJF(Preemptive)</a>
+            <a href="/Operating System/documentation assests/pages/prior.html" class="custom-nav-link ">Priority</a>
+            <a href="/Operating System/documentation assests/pages/priorpre.html" class="custom-nav-link ">Priority(Preemptive)</a>
+            <a href="/Operating System/documentation assests/pages/round.html" class="custom-nav-link active">Round Robin</a>
             <a href="/Operating System/documentation assests/pages/proposed.html" class="custom-nav-link">Proposed</a>
         </div>
 
@@ -441,14 +441,14 @@
     <!-- Mobile Drawer Menu -->
     <div class="custom-drawer" id="custom-drawer">
         <a href="/Operating System/CodeBrain_Page.html" class="custom-drawer-link">About</a>
-        <a href="./documentation assests/pages/fcfs.html" class="custom-drawer-link active">FCFS</a>
+        <a href="./documentation assests/pages/fcfs.html" class="custom-drawer-link">FCFS</a>
         <a href="/Operating System/documentation assests/pages/sjf.html" class="custom-drawer-link">SJF</a>
         <a href="/Operating System/documentation assests/pages/sjfpre.html" class="custom-drawer-link">SJF(Preemptive)</a>
         <a href="/Operating System/documentation assests/pages/ljf.html" class="custom-drawer-link">LJF</a>
         <a href="/Operating System/documentation assests/pages/ljfpre.html" class="custom-drawer-link">LJF(Preemptive)</a>
         <a href="/Operating System/documentation assests/pages/prior.html" class="custom-drawer-link">Priority</a>
-        <a href="/Operating System/documentation assests/pages/priorpre.html" class="custom-drawer-link">Priority(Preemptive)</a>
-        <a href="/Operating System/documentation assests/pages/round.html" class="custom-drawer-link">Round Robin</a>
+        <a href="/Operating System/documentation assests/pages/priorpre.html" class="custom-drawer-link ">Priority(Preemptive)</a>
+        <a href="/Operating System/documentation assests/pages/round.html" class="custom-drawer-link active">Round Robin</a>
         <a href="/Operating System/documentation assests/pages/proposed.html" class="custom-drawer-link">Proposed</a>
     </div>
 
@@ -578,38 +578,38 @@
 
     <!-- Main Content -->
     <main>
-        <h1 class="page-title">FCFS (First-Come, First-Served) Scheduling</h1>
+        <h1 class="page-title">Round Robin Scheduling</h1>
 
         <div class="two-column-layout">
             <div class="card">
                 <h1>Definition:</h1>
-                <p>FCFS is a non-preemptive scheduling algorithm where the process that arrives first is executed first. It works on a simple FIFO (First-In-First-Out) principle.</p>
-                <h3>Why FCFS?</h3>
+                <p>Round Robin Scheduling assigns each process a fixed time slice (quantum) and cycles through them in order, preempting and re-queuing unfinished processes.</p>
+                <h3>Why Round Robin ?</h3>
                 <ul>
-                    <li>Simple to implement</li>
-                    <li>Fair — serves processes in arrival order</li>
-                    <li>Suitable for batch systems</li>
+                    <li>Fair — every process gets equal CPU time in turns</li>
+                    <li>Good for time-sharing and interactive systems</li>
+                    <li>Prevents starvation of any process</li>
                 </ul>
                 <a href="https://www.sciencedirect.com/topics/computer-science/first-come-first-served">
                     <div class="btn">Learn More</div>
                 </a>
 
                 <div style="padding: 1.5rem; background-color: #f4f6f8; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); font-family: Arial, sans-serif; color: #333;">
-                    <h2 style="margin-bottom: 1rem; font-size: 1.6rem; color: #222;">FCFS Scheduling Code Explanation</h2>
+                    <h2 style="margin-bottom: 1rem; font-size: 1.6rem; color: #222;">SJFPre Scheduling Code Explanation</h2>
                     <ol style="padding-left: 1.2rem; line-height: 1.6;">
-                        <li> Initializes the ready queue and sets the initial simulation time to 0.</li>
-                        <li> Creates arrays to store turnaround and waiting times.</li>
-                        <li> If visual mode is enabled, UI elements are prepared for animation.</li>
-                        <li> The main loop runs until all processes are executed (ready queue is empty).</li>
-                        <li> Processes that have arrived by current time are added to a temporary queue.</li>
-                        <li> If no process is ready, idle time is recorded in the Gantt chart.</li>
-                        <li> Among the ready processes, the earliest arriving one is selected.</li>
-                        <li> If visual mode is active, the UI displays the selected process for simulation.</li>
-                        <li> The selected process runs; the current time is incremented by its burst time.</li>
-                        <li> Turnaround time = finish time - arrival time; Waiting time = turnaround - burst time.</li>
-                        <li> Executed process is removed from the ready queue.</li>
-                        <li> Execution details are stored in the Gantt chart and the temp queue is cleared.</li>
-                        <li> After all processes are done, average turnaround, waiting, and response times are calculated.</li>
+                        <li>Initializes the ready queue and sets the initial simulation time to 0.</li>
+                        <li>Creates arrays to store turnaround, waiting, and response times.</li>
+                        <li>If visual mode is enabled, UI elements are prepared for animation.</li>
+                        <li>Processes are added to the ready queue based on arrival time.</li>
+                        <li>The main loop runs until all processes are completed (ready queue is empty).</li>
+                        <li>At each iteration, the first process in the queue is selected for execution.</li>
+                        <li>If it’s the process's first execution, its response time is recorded.</li>
+                        <li>The process runs for a time slice equal to the quantum or until it finishes, whichever is shorter.</li>
+                        <li>The current time is incremented accordingly, and the Gantt chart is updated.</li>
+                        <li>If the process is not finished, it is re-added to the end of the queue with updated remaining time.</li>
+                        <li>If the process finishes, turnaround and waiting times are calculated.</li>
+                        <li>Newly arrived processes during the time slice are added to the queue.</li>
+                        <li>After all processes finish, average turnaround, waiting, and response times are calculated.</li>
                     </ol>
                 </div>
 
@@ -624,90 +624,160 @@
                     <!-- Initial View of the Code -->
                     <div class="code-container">
                         <pre id="code-snippet">
-async function FCFS(flag) {
+
+async function roundRobin(flag1) {
     readyQueueInit();
-    let p, min;
-    let turnAroundFCFS = [];
-    let waitingFCFS = [];
-    let processQueue = [];
+    let timeQuanta = Number($("#time_quanta").val());
+    if (timeQuanta == 0)
+        timeQuanta = 90;
     let time = 0;
-    if (flag) {
+    let processQueue = [];
+    let min, p, j, flag;
+    let completionTime = [];
+    let turnAroundRR = [];
+    let responseRR = [];
+    let waitingRR = [];
+    let runningQueue = [];
+    if (flag1) {
         $("#wq").attr("hidden", true)
         $("#vis").removeAttr("hidden");
         $('html, body').animate({
             scrollTop: $("#vis").offset().top
         }, 0);
     }
-    outer: while (readyQueue.length != 0) {
+    // getting the initial processes in to the process queue
+    while (true) {
+        if (readyQueue.length == 0)
+            break;
         for (let process in readyQueue) {
             if (readyQueue[process].arrival_time <= time) {
                 processQueue.push(readyQueue[process]);
             }
         }
         if (processQueue.length === 0) {
-            if (ganttFCFS.length > 0 && ganttFCFS[ganttFCFS.length - 1].processId != null) {
-                ganttFCFS[ganttFCFS.length - 1].endTime = time;
-                ganttFCFS.push({
+            if (ganttRoundRobin.length > 0 && ganttRoundRobin[ganttRoundRobin.length - 1].processId != null) {
+                ganttRoundRobin[ganttRoundRobin.length - 1].endTime = time;
+                ganttRoundRobin.push({
                     processId: null,
                     startTime: time,
                     endTime: time + 1
                 });
-            } else if (ganttFCFS.length == 0) {
-                ganttFCFS.push({
+            } else if (ganttRoundRobin.length == 0) {
+                ganttRoundRobin.push({
                     processId: null,
                     startTime: time,
                     endTime: time + 1
                 });
             }
             time++;
-            continue outer;
+            continue;
         }
-        let vis_block = "";
-        min = Number.MAX_VALUE;
-        for (let process in processQueue) {
-            vis_block += `<span class='fitem'>P${processQueue[process].id}</span>`
-            if (processQueue[process].arrival_time < min) {
-                min = processQueue[process];
-                p = process;
+
+        break;
+    }
+    //then one by one all the processes
+    outer: while (processQueue.length != 0) {
+        prev_time = time;
+        let currentProcess = processQueue[0];
+
+        if (currentProcess.burst_time === getProcessById(currentProcess.id).burst_time) {
+            //It means came for the first time
+            responseRR[currentProcess.id] = prev_time - currentProcess.arrival_time;
+        }
+
+        if (currentProcess.burst_time > timeQuanta) {
+            currentProcess.burst_time -= timeQuanta;
+            time += timeQuanta;
+            flag = true;
+        } else {
+            flag = false;
+            time += currentProcess.burst_time;
+            completionTime[currentProcess.id] = time;
+            for (let process in readyQueue) {
+                if (readyQueue[process].id == currentProcess.id) {
+                    readyQueue.splice(process, 1);
+                    break;
+                }
             }
         }
-        if (flag) {
-            $("#vis_name").empty().append("FCFS")
+        let vis_block = ""
+        for (let process in processQueue)
+            vis_block += `<span class='fitem'>P${processQueue[process].id}</span>`
+        if (flag1) {
+            $("#vis_name").empty().append("Round Robin")
             $("#vis_rq").empty().html(vis_block)
-            $("#vis_cpu").empty().html(`<span class='fitem'>P${processQueue[p].id}</span>`)
+            $("#vis_cpu").empty().html(`<span class='fitem'>P${currentProcess.id}</span>`)
             $("#vis_time").empty().append(time)
             $(".btn").attr("disabled", true)
             await new Promise(r => setTimeout(r, 2000));
             if (stop_flag)
                 break outer;
         }
-        prev_time = time;
-        time += processQueue[p].burst_time;
-        turnAroundFCFS[processQueue[p].id] = time - processQueue[p].arrival_time;
-        waitingFCFS[processQueue[p].id] = turnAroundFCFS[processQueue[p].id] - processQueue[p].burst_time;
-
-        for (let pro in readyQueue) {
-            if (readyQueue[pro].id === processQueue[p].id)
-                readyQueue.splice(pro, 1);
-        }
-
-        if (ganttFCFS.length > 0) {
-            ganttFCFS[ganttFCFS.length - 1].endTime = prev_time;
-        }
-        ganttFCFS.push({
-            processId: processQueue[p].id,
+        if (ganttRoundRobin.length > 0)
+            ganttRoundRobin[ganttRoundRobin.length - 1].endTime = prev_time;
+        ganttRoundRobin.push({
+            processId: currentProcess.id,
             startTime: prev_time,
             endTime: time
         });
-        processQueue.splice(0, processQueue.length);
-
+        //Taking remaining process and pushing them in running queue
+        while (true) {
+            if (readyQueue.length == 0)
+                break;
+            for (let process in readyQueue) {
+                if (readyQueue[process].arrival_time <= time) {
+                    runningQueue.push(readyQueue[process]);
+                }
+            }
+            if (runningQueue.length === 0) {
+                if (ganttRoundRobin.length > 0 && ganttRoundRobin[ganttRoundRobin.length - 1].processId != null) {
+                    ganttRoundRobin[ganttRoundRobin.length - 1].endTime = time;
+                    ganttRoundRobin.push({
+                        processId: null,
+                        startTime: time,
+                        endTime: time + 1
+                    });
+                } else if (ganttRoundRobin.length == 0) {
+                    ganttRoundRobin.push({
+                        processId: null,
+                        startTime: time,
+                        endTime: time + 1
+                    });
+                }
+                time++;
+                continue;
+            }
+            // now taking those processes from running queue to process queue which has minimum arrival time
+            while (runningQueue.length != 0) {
+                min = Number.MAX_VALUE;
+                for (let process in runningQueue) {
+                    if (runningQueue[process].arrival_time < min) {
+                        min = runningQueue[process].arrival_time;
+                        j = process;
+                    }
+                }
+                if (!processQueue.includes(runningQueue[j])) {
+                    processQueue.push(runningQueue[j]);
+                }
+                runningQueue.splice(j, 1);
+            }
+            break;
+        }
+        if (flag == true) {
+            processQueue.push(currentProcess);
+        }
+        processQueue.shift();
     }
     $(".btn").removeAttr("disabled")
     stop_flag = false;
-    completionTimeFCFS = time;
-    avgTurnaroundTimeFCFS = calculateAvgTime(turnAroundFCFS);
-    avgWaitingTimeFCFS = calculateAvgTime(waitingFCFS);
-    avgResponseTimeFCFS = avgWaitingTimeFCFS;
+    for (p in processes) {
+        turnAroundRR[processes[p].id] = completionTime[processes[p].id] - processes[p].arrival_time;
+        waitingRR[processes[p].id] = turnAroundRR[processes[p].id] - processes[p].burst_time;
+    }
+    completionTimeRoundRobin = time;
+    avgTurnaroundTimeRoundRobin = calculateAvgTime(turnAroundRR);
+    avgWaitingTimeRoundRobin = calculateAvgTime(waitingRR);
+    avgResponseTimeRoundRobin = calculateAvgTime(responseRR);
 }
                         </pre>
                     </div>
@@ -829,7 +899,7 @@ async function FCFS(flag) {
         <div class="content-container">
             <!-- Video Section -->
             <div class="video-section">
-                <h2 class="title">FCFS Scheduling Algorithm Demonstration</h2>
+                <h2 class="title">Round Robin Scheduling Algorithm Demonstration</h2>
                 <p class="intro-text">
                     The <span class="process-table-link" id="processTableLink">Process Table</span> values used here are consistent with those provided in the About section of this documentation. 
                 </p>
