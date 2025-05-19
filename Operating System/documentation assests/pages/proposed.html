@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FCFS scheduling algorithm </title>
+    <title>Proposed scheduling algorithm </title>
     <style>
         /* Base Styles */
         :root {
@@ -419,15 +419,15 @@
         <a href="./CodeBrain_Page.html" class="custom-logo">CodeBrain</a>
         <div class="custom-nav-links" id="custom-nav-links">
             <a href="/Operating System/CodeBrain_Page.html" class="custom-nav-link">About</a>
-            <a href="./documentation assests/pages/fcfs.html" class="custom-nav-link active">FCFS</a>
-            <a href="/Operating System/documentation assests/pages/sjf.html" class="custom-nav-link">SJF</a>
+            <a href="./documentation assests/pages/fcfs.html" class="custom-nav-link ">FCFS</a>
+            <a href="/Operating System/documentation assests/pages/sjf.html" class="custom-nav-link ">SJF</a>
             <a href="/Operating System/documentation assests/pages/sjfpre.html" class="custom-nav-link">SJF(Preemptive)</a>
             <a href="/Operating System/documentation assests/pages/ljf.html" class="custom-nav-link">LJF</a>
-            <a href="/Operating System/documentation assests/pages/ljfpre.html" class="custom-nav-link">LJF(Preemptive)</a>
+            <a href="/Operating System/documentation assests/pages/ljfpre.html " class="custom-nav-link">LJF(Preemptive)</a>
             <a href="/Operating System/documentation assests/pages/prior.html" class="custom-nav-link">Priority</a>
-            <a href="/Operating System/documentation assests/pages/priorpre.html" class="custom-nav-link">Priority(Preemptive)</a>
+            <a href="/Operating System/documentation assests/pages/priorpre.html" class="custom-nav-link ">Priority(Preemptive)</a>
             <a href="/Operating System/documentation assests/pages/round.html" class="custom-nav-link">Round Robin</a>
-            <a href="/Operating System/documentation assests/pages/proposed.html" class="custom-nav-link">Proposed</a>
+            <a href="/Operating System/documentation assests/pages/proposed.html" class="custom-nav-link active">Proposed</a>
         </div>
 
         <!-- Mobile Menu Toggle Button -->
@@ -441,15 +441,15 @@
     <!-- Mobile Drawer Menu -->
     <div class="custom-drawer" id="custom-drawer">
         <a href="/Operating System/CodeBrain_Page.html" class="custom-drawer-link">About</a>
-        <a href="./documentation assests/pages/fcfs.html" class="custom-drawer-link active">FCFS</a>
+        <a href="./documentation assests/pages/fcfs.html" class="custom-drawer-link">FCFS</a>
         <a href="/Operating System/documentation assests/pages/sjf.html" class="custom-drawer-link">SJF</a>
         <a href="/Operating System/documentation assests/pages/sjfpre.html" class="custom-drawer-link">SJF(Preemptive)</a>
         <a href="/Operating System/documentation assests/pages/ljf.html" class="custom-drawer-link">LJF</a>
         <a href="/Operating System/documentation assests/pages/ljfpre.html" class="custom-drawer-link">LJF(Preemptive)</a>
         <a href="/Operating System/documentation assests/pages/prior.html" class="custom-drawer-link">Priority</a>
-        <a href="/Operating System/documentation assests/pages/priorpre.html" class="custom-drawer-link">Priority(Preemptive)</a>
+        <a href="/Operating System/documentation assests/pages/priorpre.html" class="custom-drawer-link ">Priority(Preemptive)</a>
         <a href="/Operating System/documentation assests/pages/round.html" class="custom-drawer-link">Round Robin</a>
-        <a href="/Operating System/documentation assests/pages/proposed.html" class="custom-drawer-link">Proposed</a>
+        <a href="/Operating System/documentation assests/pages/proposed.html" class="custom-drawer-link active">Proposed</a>
     </div>
 
     <!-- Style and Script -->
@@ -578,38 +578,38 @@
 
     <!-- Main Content -->
     <main>
-        <h1 class="page-title">FCFS (First-Come, First-Served) Scheduling</h1>
+        <h1 class="page-title">Proposed Scheduling</h1>
 
         <div class="two-column-layout">
             <div class="card">
                 <h1>Definition:</h1>
-                <p>FCFS is a non-preemptive scheduling algorithm where the process that arrives first is executed first. It works on a simple FIFO (First-In-First-Out) principle.</p>
-                <h3>Why FCFS?</h3>
+                <p>The Proposed Algorithm dynamically schedules processes based on multiple criteria (e.g., burst time, arrival time, priority) to optimize CPU efficiency and reduce average waiting and turnaround times.</p>
+                <h3>Why Proposed Scheduling ?</h3>
                 <ul>
-                    <li>Simple to implement</li>
-                    <li>Fair — serves processes in arrival order</li>
-                    <li>Suitable for batch systems</li>
+                    <li>Improves average turnaround and waiting times over standard algorithms</li>
+                    <li>Flexible — adapts to different process characteristics dynamically</li>
+                    <li>Can reduce starvation using aging or feedback mechanisms</li>
                 </ul>
                 <a href="https://www.sciencedirect.com/topics/computer-science/first-come-first-served">
                     <div class="btn">Learn More</div>
                 </a>
 
                 <div style="padding: 1.5rem; background-color: #f4f6f8; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); font-family: Arial, sans-serif; color: #333;">
-                    <h2 style="margin-bottom: 1rem; font-size: 1.6rem; color: #222;">FCFS Scheduling Code Explanation</h2>
+                    <h2 style="margin-bottom: 1rem; font-size: 1.6rem; color: #222;">SJFPre Scheduling Code Explanation</h2>
                     <ol style="padding-left: 1.2rem; line-height: 1.6;">
-                        <li> Initializes the ready queue and sets the initial simulation time to 0.</li>
-                        <li> Creates arrays to store turnaround and waiting times.</li>
-                        <li> If visual mode is enabled, UI elements are prepared for animation.</li>
-                        <li> The main loop runs until all processes are executed (ready queue is empty).</li>
-                        <li> Processes that have arrived by current time are added to a temporary queue.</li>
-                        <li> If no process is ready, idle time is recorded in the Gantt chart.</li>
-                        <li> Among the ready processes, the earliest arriving one is selected.</li>
-                        <li> If visual mode is active, the UI displays the selected process for simulation.</li>
-                        <li> The selected process runs; the current time is incremented by its burst time.</li>
-                        <li> Turnaround time = finish time - arrival time; Waiting time = turnaround - burst time.</li>
-                        <li> Executed process is removed from the ready queue.</li>
-                        <li> Execution details are stored in the Gantt chart and the temp queue is cleared.</li>
-                        <li> After all processes are done, average turnaround, waiting, and response times are calculated.</li>
+                        <li>Initializes all data structures, sets simulation time to 0.</li>
+                        <li>Creates arrays to store turnaround, waiting, and response times.</li>
+                        <li>If visual mode is enabled, UI elements are prepared for visualization.</li>
+                        <li>The main loop runs until all processes are completed.</li>
+                        <li>At each time unit, processes that have arrived are moved to the ready queue.</li>
+                        <li>Processes in the ready queue are evaluated based on combined metrics (e.g., burst time, priority, aging).</li>
+                        <li>The most suitable process is selected using a decision function (e.g., weighted score or dynamic rule).</li>
+                        <li>If it’s the process's first execution, its response time is recorded.</li>
+                        <li>The selected process runs (either fully or by time slice depending on preemption).</li>
+                        <li>Execution is logged in the Gantt chart and time is updated.</li>
+                        <li>Finished processes are removed and their turnaround/waiting times are calculated.</li>
+                        <li>Processes are re-evaluated each cycle for fairness and adaptability.</li>
+                        <li>After all processes finish, average metrics are calculated and displayed.</li>
                     </ol>
                 </div>
 
@@ -624,6 +624,99 @@
                     <!-- Initial View of the Code -->
                     <div class="code-container">
                         <pre id="code-snippet">
+
+async function newProposed(flag) {
+    readyQueueInit();
+    let turnAroundTime = [];
+    let waitingTime = [];
+    let completionTime = [];
+    let responseTime = [];
+    let time = 0;
+    if (flag) {
+        $("#vis").removeAttr("hidden");
+        $("#wq").removeAttr("hidden");
+        $('html, body').animate({
+            scrollTop: $("#vis").offset().top
+        }, 0);
+    }
+    outer: while (readyQueue.length != 0) {
+        calculateTimeQuanta();
+        calculateBurstTimePriority();
+        calculateF();
+        calculateFRank();
+        sortByFRank();
+        $("#vis_wq").empty()
+        $("#vis_rq").empty()
+        while (arrangedReadyQueue.length != 0) {
+            let vis_block = ""
+            for (let process in arrangedReadyQueue) {
+                vis_block += `<span class='fitem'>P${arrangedReadyQueue[process].id}</span>`
+            }
+            let p = arrangedReadyQueue.shift();
+            prev_time = time;
+            if (p.burst_time === getProcessById(p.id).burst_time) {
+                //It means came for the first time
+                responseTime[p.id] = prev_time;
+            }
+            if (p.burst_time > timeQuanta) {
+                p.burst_time -= timeQuanta;
+                time += timeQuanta;
+                readyQueue.push(p);
+                let vis_block = ""
+                for (let process in readyQueue) {
+                    vis_block += `<span class='fitem'>P${readyQueue[process].id}</span>`
+                }
+                if (flag) {
+                    $("#vis_wq").empty().html(vis_block)
+                }
+            } else //completed
+            {
+                time += p.burst_time;
+                completionTime[p.id] = time;
+                let process = getProcessById(p.id);
+                waitingTime[p.id] = completionTime[p.id] - process.burst_time;
+            }
+            if (flag) {
+                $("#vis_name").empty().append("Proposed")
+                $("#vis_rq").empty().html(vis_block)
+                $("#vis_cpu").empty().html(`<span class='fitem'>P${p.id}</span>`)
+                $("#vis_time").empty().append(time)
+                $(".btn").attr("disabled", true)
+                await new Promise(r => setTimeout(r, 2000));
+                if (stop_flag)
+                    break outer;
+            }
+            ganttProposed.push({
+                processId: p.id,
+                startTime: prev_time,
+                endTime: time
+            });
+        }
+    }
+    $(".btn").removeAttr("disabled")
+    stop_flag = false;
+    for (i in completionTime) {
+        turnAroundTime[i] = completionTime[i];
+    }
+    completionTimeNew = time;
+    avgWaitingTimeNew = calculateAvgTime(waitingTime);
+    avgTurnAroundTimeNew = calculateAvgTime(turnAroundTime);
+    avgResponseTimeNew = calculateAvgTime(responseTime);
+}
+
+function calculateAvgTime(waitingTime) {
+    let avg = 0;
+    for (i = 1; i < waitingTime.length; i++) {
+        avg += waitingTime[i];
+    }
+    return avg / (waitingTime.length - 1);
+}
+var avgWaitingTimeFCFS = 0,
+    avgTurnaroundTimeFCFS = 0,
+    avgResponseTimeFCFS = 0;
+var ganttFCFS = [];
+var completionTimeFCFS = 0;
+
 async function FCFS(flag) {
     readyQueueInit();
     let p, min;
@@ -829,7 +922,7 @@ async function FCFS(flag) {
         <div class="content-container">
             <!-- Video Section -->
             <div class="video-section">
-                <h2 class="title">FCFS Scheduling Algorithm Demonstration</h2>
+                <h2 class="title">Proposed Scheduling Algorithm Demonstration</h2>
                 <p class="intro-text">
                     The <span class="process-table-link" id="processTableLink">Process Table</span> values used here are consistent with those provided in the About section of this documentation. 
                 </p>
