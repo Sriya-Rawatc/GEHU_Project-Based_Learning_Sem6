@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeBrain- Realtime Code-Editor</title>
+  <style>
+    :root {
+      --bg-primary: linear-gradient(135deg, #0a0a0f 0%, #1a0f2e 50%, #0f1419 100%);
+      --bg-secondary: rgba(25, 15, 45, 0.95);
+      --text-primary: #ffffff;
+      --text-secondary: #b8c5d1;
+      --accent-gold: #ffd700;
+      --accent-cyan: #00e5ff;
+      --accent-purple: #8b5cf6;
+      --accent-pink: #ff006e;
+      --accent-green: #00ff87;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --shadow-glow: 0 8px 32px rgba(0, 229, 255, 0.3);
+      --shadow-premium: 0 20px 60px rgba(139, 92, 246, 0.4);
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', 'Inter', -apple-system, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    
+    /* Premium loading screen */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 0.8s ease-out;
+    }
+    
+    .loading-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .loader {
+      width: 80px;
+      height: 80px;
+      border: 3px solid transparent;
+      border-top: 3px solid var(--accent-cyan);
+      border-right: 3px solid var(--accent-purple);
+      border-radius: 50%;
+      animation: spin 1.5s linear infinite;
+      box-shadow: 0 0 30px var(--accent-cyan);
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Navigation bar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    
+    .navbar.scrolled {
+      background: rgba(10, 10, 15, 0.98);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, var(--accent-gold), var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .nav-menu {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    .nav-item {
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .nav-item:hover {
+      color: var(--text-primary);
+      background: var(--glass-bg);
+      transform: translateY(-2px);
+    }
+    
+    .nav-item::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--accent-cyan);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+    
+    .nav-item:hover::after {
+      width: 80%;
+    }
+    
+    /* Hero section */
+    .hero {
+      margin-top: 80px;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: heroGlow 3s ease-in-out infinite alternate;
+      text-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+    }
+    
+    @keyframes heroGlow {
+      0% { filter: brightness(1) saturate(1); }
+      100% { filter: brightness(1.2) saturate(1.3); }
+    }
+    
+    .hero p {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 2rem;
+      animation: fadeInUp 1s ease-out 0.5s both;
+    }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeInUp 1s ease-out 0.7s both;
+    }
+    
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      color: white;
+      box-shadow: var(--shadow-premium);
+    }
+    
+    .btn-secondary {
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 50px rgba(139, 92, 246, 0.6);
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    /* Main content */
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 3rem;
+      padding: 4rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    /* Enhanced chapters panel */
+    .chapters-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 2rem;
+      height: fit-content;
+      position: sticky;
+      top: 120px;
+      box-shadow: var(--shadow-premium);
+      animation: slideInLeft 1s ease-out;
+    }
+    
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-100px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .panel-header {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .chapter {
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .chapter::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+    }
+    
+    .chapter:hover::before {
+      transform: scaleY(1);
+    }
+    
+    .chapter:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent-cyan);
+      transform: translateX(10px) scale(1.02);
+      box-shadow: 0 10px 30px rgba(0, 229, 255, 0.3);
+    }
+    
+    .chapter.active {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(139, 92, 246, 0.1));
+      border-color: var(--accent-cyan);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .chapter-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    
+    .chapter-content {
+      flex: 1;
+    }
+    
+    .chapter-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+    
+    .chapter-duration {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    
+    /* Enhanced video section */
+    .video-section {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow-premium);
+      animation: slideInRight 1s ease-out;
+    }
+    
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(100px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .video-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .video-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-purple);
+    }
+    
+    .video-controls {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .control-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .control-btn:hover {
+      background: var(--accent-cyan);
+      transform: scale(1.1);
+      box-shadow: 0 5px 15px rgba(0, 229, 255, 0.4);
+    }
+    
+    .video-wrapper {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      margin-bottom: 1.5rem;
+    }
+    
+    .video-placeholder {
+      width: 100%;
+      height: 400px;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      border: 2px solid var(--accent-cyan);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .video-placeholder::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(0, 229, 255, 0.1), transparent);
+      animation: shimmer 3s linear infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+    
+    .play-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+    
+    .play-icon:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.5);
+    }
+    
+    .video-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+    
+    .info-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s ease;
+    }
+    
+    .info-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px);
+    }
+    
+    .info-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      display: block;
+    }
+    
+    .info-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    
+    /* Features section */
+    .features-section {
+      padding: 4rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .section-title {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    .feature-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+    
+    .feature-card:hover::before {
+      opacity: 0.1;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: var(--shadow-premium);
+    }
+    
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .feature-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--accent-gold);
+    }
+    
+    /* Particle canvas */
+    #hexCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      opacity: 0.8;
+    }
+    
+    /* Settings panel */
+    .settings-toggle {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-premium);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .settings-toggle:hover {
+      transform: scale(1.1) rotate(90deg);
+    }
+    
+    .settings-panel {
+      position: fixed;
+      bottom: 100px;
+      right: 2rem;
+      width: 300px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px) scale(0.9);
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
+    
+    .settings-panel.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+    
+    .setting-item {
+      margin-bottom: 1rem;
+    }
+    
+    .setting-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+    
+    .setting-range {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      cursor: pointer;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 1024px) {
+      .main-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .chapters-panel {
+        position: static;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .nav-menu {
+        display: none;
+      }
+      
+      .hero h1 {
+        font-size: 3rem;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loader"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-content">
+      <div class="logo">CodeBrain</div>
+      <div class="nav-menu">
+        <a href="#home" class="nav-item">Home</a>
+        <a href="#features" class="nav-item">Features</a>
+        <a href="#tutorials" class="nav-item">Tutorials</a>
+        <a href="#contact" class="nav-item">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <section id="embedded-page-section" style="position: relative; padding: 4rem 2rem; background: linear-gradient(135deg, #0a0a0f 0%, #1a0f2e 50%, #0f1419 100%); overflow: hidden;">
+    <style>
+      /* Embedded Page Container Styles */
+      .embedded-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+      }
+      
+      .embedded-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+      }
+      
+      .embedded-title {
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 800;
+        background: linear-gradient(135deg, #ffd700 0%, #00e5ff 50%, #8b5cf6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        animation: titleGlow 3s ease-in-out infinite alternate;
+      }
+      
+      @keyframes titleGlow {
+        0% { filter: brightness(1) saturate(1); }
+        100% { filter: brightness(1.3) saturate(1.5); }
+      }
+      
+      .embedded-subtitle {
+        color: #b8c5d1;
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      
+      /* Page Frame with Advanced Effects */
+      .page-frame {
+        position: relative;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 2rem;
+        box-shadow: 
+          0 20px 60px rgba(139, 92, 246, 0.4),
+          0 0 0 1px rgba(255, 255, 255, 0.05),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        transform: translateY(50px);
+        opacity: 0;
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .page-frame.visible {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      
+      .page-frame::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.8s ease;
+        z-index: 1;
+      }
+      
+      .page-frame:hover::before {
+        left: 100%;
+      }
+      
+      /* Control Panel */
+      .control-panel {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .control-group {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+      
+      .control-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: none;
+        background: linear-gradient(135deg, #00e5ff, #8b5cf6);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .control-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 5px 20px rgba(0, 229, 255, 0.5);
+      }
+      
+      .control-btn:active {
+        transform: scale(0.95);
+      }
+      
+      .control-btn.active {
+        background: linear-gradient(135deg, #ffd700, #ff006e);
+        animation: pulse 2s infinite;
+      }
+      
+      @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+        50% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+      }
+      
+      .page-url {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        color: #00e5ff;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        min-width: 200px;
+        text-align: center;
+      }
+      
+      /* Iframe Container with Effects */
+      .iframe-container {
+        position: relative;
+        width: 100%;
+        height: 600px;
+        border-radius: 16px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+        box-shadow: 
+          inset 0 0 50px rgba(0, 0, 0, 0.5),
+          0 10px 30px rgba(0, 0, 0, 0.3);
+        transform: scale(0.95);
+        transition: all 0.5s ease;
+      }
+      
+      .iframe-container.active {
+        transform: scale(1);
+        box-shadow: 
+          inset 0 0 50px rgba(0, 0, 0, 0.3),
+          0 20px 60px rgba(0, 229, 255, 0.3);
+      }
+      
+      .iframe-container::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #ffd700, #00e5ff, #8b5cf6, #ff006e);
+        border-radius: 18px;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .iframe-container.active::before {
+        opacity: 1;
+        animation: borderGlow 3s linear infinite;
+      }
+      
+      @keyframes borderGlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      .embedded-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 16px;
+        background: white;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        position: relative;
+        z-index: 2;
+      }
+      
+      .embedded-iframe.loaded {
+        opacity: 1;
+      }
+      
+      /* Loading Overlay */
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        z-index: 3;
+        transition: all 0.5s ease;
+      }
+      
+      .loading-overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.9);
+      }
+      
+      .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top: 3px solid #00e5ff;
+        border-right: 3px solid #8b5cf6;
+        border-radius: 50%;
+        animation: spin 1.5s linear infinite;
+        margin-bottom: 1rem;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .loading-text {
+        color: #b8c5d1;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .loading-progress {
+        width: 200px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      
+      .loading-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #00e5ff, #8b5cf6);
+        border-radius: 2px;
+        width: 0%;
+        transition: width 0.3s ease;
+        animation: progressGlow 2s ease-in-out infinite alternate;
+      }
+      
+      @keyframes progressGlow {
+        0% { box-shadow: 0 0 5px rgba(0, 229, 255, 0.5); }
+        100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.8), 0 0 30px rgba(0, 229, 255, 0.5); }
+      }
+      
+      /* Entrance/Exit Animations */
+      .page-entrance {
+        animation: pageEnter 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      }
+      
+      .page-exit {
+        animation: pageExit 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      }
+      
+      @keyframes pageEnter {
+        0% {
+          transform: translateY(100px) scale(0.8);
+          opacity: 0;
+          filter: blur(10px);
+        }
+        50% {
+          transform: translateY(-10px) scale(1.02);
+          opacity: 0.8;
+          filter: blur(2px);
+        }
+        100% {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+          filter: blur(0);
+        }
+      }
+      
+      @keyframes pageExit {
+        0% {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+          filter: blur(0);
+        }
+        100% {
+          transform: translateY(-50px) scale(0.9);
+          opacity: 0;
+          filter: blur(5px);
+        }
+      }
+      
+      /* Status Indicator */
+      .status-indicator {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        z-index: 4;
+        transition: all 0.3s ease;
+      }
+      
+      .status-indicator.loading {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.3);
+      }
+      
+      .status-indicator.loaded {
+        background: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.3);
+      }
+      
+      .status-indicator.error {
+        background: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.3);
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .control-panel {
+          flex-direction: column;
+          gap: 1rem;
+        }
+        
+        .control-group {
+          justify-content: center;
+        }
+        
+        .iframe-container {
+          height: 400px;
+        }
+        
+        .page-url {
+          min-width: 150px;
+          font-size: 0.8rem;
+        }
+      }
+      
+      /* Background Effects */
+      .bg-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+      
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: radial-gradient(circle, #00e5ff, transparent);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+      }
+      
+      @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
+        50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
+      }
+    </style>
+    
+    <!-- Background Particles -->
+    <div class="bg-particles" id="bgParticles"></div>
+    
+    <div class="embedded-container">
+      <!-- Section Header -->
+      <div class="embedded-header">
+        <h2 class="embedded-title">Code Together, Smarter — With CodeBrain</h2>
+        <p class="embedded-subtitle">The real-time collaborative coding editor built for teams</p>
+      </div>
+      
+      <!-- Page Frame -->
+      <div class="page-frame" id="pageFrame">
+        <!-- Control Panel -->
+        <div class="control-panel">
+          <div class="control-group">
+            <button class="control-btn" id="loadBtn" title="Load Page">⚡</button>
+            <button class="control-btn" id="refreshBtn" title="Refresh">🔄</button>
+            <button class="control-btn" id="fullscreenBtn" title="Fullscreen">⛶</button>
+            <button class="control-btn" id="closeBtn" title="Close">❌</button>
+          </div>
+          
+          <div class="page-url" id="pageUrl">index.html</div>
+          
+          <div class="control-group">
+            <button class="control-btn" id="zoomInBtn" title="Zoom In">➕</button>
+            <button class="control-btn" id="zoomOutBtn" title="Zoom Out">➖</button>
+            <button class="control-btn" id="resetZoomBtn" title="Reset Zoom">🔃</button>
+          </div>
+        </div>
+        
+        <!-- Iframe Container -->
+        <div class="iframe-container" id="iframeContainer">
+          <!-- Status Indicator -->
+          <div class="status-indicator loading" id="statusIndicator">Loading...</div>
+          
+          <!-- Loading Overlay -->
+          <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading content...</div>
+            <div class="loading-progress">
+              <div class="loading-progress-bar" id="progressBar"></div>
+            </div>
+          </div>
+          
+          <!-- Embedded Iframe -->
+          <iframe class="embedded-iframe" id="embeddedIframe" src="" sandbox="allow-same-origin allow-scripts allow-forms allow-modals allow-popups"></iframe>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      (function() {
+        // Scoped variables to avoid conflicts
+        const embeddedPageSection = {
+          iframe: null,
+          container: null,
+          loadingOverlay: null,
+          progressBar: null,
+          statusIndicator: null,
+          pageFrame: null,
+          currentZoom: 1,
+          isLoaded: false,
+          
+          init() {
+            this.iframe = document.getElementById('embeddedIframe');
+            this.container = document.getElementById('iframeContainer');
+            this.loadingOverlay = document.getElementById('loadingOverlay');
+            this.progressBar = document.getElementById('progressBar');
+            this.statusIndicator = document.getElementById('statusIndicator');
+            this.pageFrame = document.getElementById('pageFrame');
+            
+            this.setupEventListeners();
+            this.createBackgroundParticles();
+            this.observeSection();
+            
+            // Auto-load after 1 second
+            setTimeout(() => this.loadPage(), 1000);
+          },
+          
+          setupEventListeners() {
+            // Control buttons
+            document.getElementById('loadBtn').addEventListener('click', () => this.loadPage());
+            document.getElementById('refreshBtn').addEventListener('click', () => this.refreshPage());
+            document.getElementById('fullscreenBtn').addEventListener('click', () => this.toggleFullscreen());
+            document.getElementById('closeBtn').addEventListener('click', () => this.closePage());
+            document.getElementById('zoomInBtn').addEventListener('click', () => this.zoomIn());
+            document.getElementById('zoomOutBtn').addEventListener('click', () => this.zoomOut());
+            document.getElementById('resetZoomBtn').addEventListener('click', () => this.resetZoom());
+            
+            // Iframe events
+            this.iframe.addEventListener('load', () => this.onIframeLoad());
+            this.iframe.addEventListener('error', () => this.onIframeError());
+          },
+          
+          loadPage() {
+            if (this.isLoaded) return;
+            
+            this.showLoading();
+            this.animateProgress();
+            
+            // Add entrance animation
+            this.pageFrame.classList.add('page-entrance');
+            this.container.classList.add('active');
+            
+            // Load the iframe
+            this.iframe.src = 'index.html';
+            
+            // Update status
+            this.statusIndicator.textContent = 'Loading...';
+            this.statusIndicator.className = 'status-indicator loading';
+            
+            // Activate load button
+            document.getElementById('loadBtn').classList.add('active');
+          },
+          
+          refreshPage() {
+            if (!this.isLoaded) return;
+            
+            this.showLoading();
+            this.iframe.src = this.iframe.src;
+            
+            this.statusIndicator.textContent = 'Refreshing...';
+            this.statusIndicator.className = 'status-indicator loading';
+          },
+          
+          closePage() {
+            this.pageFrame.classList.add('page-exit');
+            this.container.classList.remove('active');
+            
+            setTimeout(() => {
+              this.iframe.src = '';
+              this.isLoaded = false;
+              this.hideLoading();
+              this.pageFrame.classList.remove('page-exit', 'page-entrance');
+              document.getElementById('loadBtn').classList.remove('active');
+              
+              this.statusIndicator.textContent = 'Closed';
+              this.statusIndicator.className = 'status-indicator';
+            }, 500);
+          },
+          
+          toggleFullscreen() {
+            if (this.container.requestFullscreen) {
+              this.container.requestFullscreen();
+            } else if (this.container.webkitRequestFullscreen) {
+              this.container.webkitRequestFullscreen();
+            } else if (this.container.msRequestFullscreen) {
+              this.container.msRequestFullscreen();
+            }
+          },
+          
+          zoomIn() {
+            this.currentZoom = Math.min(this.currentZoom + 0.1, 2);
+            this.iframe.style.transform = `scale(${this.currentZoom})`;
+          },
+          
+          zoomOut() {
+            this.currentZoom = Math.max(this.currentZoom - 0.1, 0.5);
+            this.iframe.style.transform = `scale(${this.currentZoom})`;
+          },
+          
+          resetZoom() {
+            this.currentZoom = 1;
+            this.iframe.style.transform = 'scale(1)';
+          },
+          
+          showLoading() {
+            this.loadingOverlay.classList.remove('hidden');
+            this.progressBar.style.width = '0%';
+          },
+          
+          hideLoading() {
+            this.loadingOverlay.classList.add('hidden');
+          },
+          
+          animateProgress() {
+            let progress = 0;
+            const interval = setInterval(() => {
+              progress += Math.random() * 15;
+              progress = Math.min(progress, 90);
+              this.progressBar.style.width = progress + '%';
+              
+              if (progress >= 90) {
+                clearInterval(interval);
+              }
+            }, 100);
+          },
+          
+          onIframeLoad() {
+            setTimeout(() => {
+              this.progressBar.style.width = '100%';
+              
+              setTimeout(() => {
+                this.hideLoading();
+                this.iframe.classList.add('loaded');
+                this.isLoaded = true;
+                
+                this.statusIndicator.textContent = 'Loaded';
+                this.statusIndicator.className = 'status-indicator loaded';
+                
+                document.getElementById('loadBtn').classList.remove('active');
+              }, 300);
+            }, 500);
+          },
+          
+          onIframeError() {
+            this.hideLoading();
+            this.statusIndicator.textContent = 'Error';
+            this.statusIndicator.className = 'status-indicator error';
+            
+            document.getElementById('loadBtn').classList.remove('active');
+          },
+          
+          createBackgroundParticles() {
+            const particleContainer = document.getElementById('bgParticles');
+            const colors = ['#ffd700', '#00e5ff', '#8b5cf6', '#ff006e', '#00ff87'];
+            
+            for (let i = 0; i < 15; i++) {
+              const particle = document.createElement('div');
+              particle.className = 'particle';
+              particle.style.left = Math.random() * 100 + '%';
+              particle.style.top = Math.random() * 100 + '%';
+              particle.style.background = `radial-gradient(circle, ${colors[i % colors.length]}, transparent)`;
+              particle.style.animationDelay = Math.random() * 6 + 's';
+              particle.style.animationDuration = (4 + Math.random() * 4) + 's';
+              
+              particleContainer.appendChild(particle);
+            }
+          },
+          
+          observeSection() {
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  this.pageFrame.classList.add('visible');
+                }
+              });
+            }, { threshold: 0.1 });
+            
+            observer.observe(this.pageFrame);
+          }
+        };
+        
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => embeddedPageSection.init());
+        } else {
+          embeddedPageSection.init();
+        }
+      })();
+    </script>
+  </section>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <h1>The CodeBrain Story</h1>
+    <p>Every feature starts with a challenge — here’s how we solved ours. Watch how CodeBrain was designed, developed, and brought to life in real time.</p>
+    <div class="cta-buttons">
+      <a href="#tutorials" class="btn btn-primary">Start Experience ✨</a>
+      <a href="#features" class="btn btn-secondary">Explore Features 🚀</a>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="main-content" id="tutorials">
+    <!-- Enhanced Chapters Panel -->
+    <div class="chapters-panel">
+      <div class="panel-header">
+        <span>📚</span> Course Chapters
+      </div>
+      <div class="chapter active" data-time="0">
+        <div class="chapter-icon">1</div>
+        <div class="chapter-content">
+          <div class="chapter-title">Introduction to Hex</div>
+          <div class="chapter-duration">5:30 mins</div>
+        </div>
+      </div>
+      <div class="chapter" data-time="60">
+        <div class="chapter-icon">2</div>
+        <div class="chapter-content">
+          <div class="chapter-title">Interactive Features</div>
+          <div class="chapter-duration">8:45 mins</div>
+        </div>
+      </div>
+      <div class="chapter" data-time="120">
+        <div class="chapter-icon">3</div>
+        <div class="chapter-content">
+          <div class="chapter-title">Advanced Implementation</div>
+          <div class="chapter-duration">12:20 mins</div>
+        </div>
+      </div>
+      <div class="chapter" data-time="180">
+        <div class="chapter-icon">4</div>
+        <div class="chapter-content">
+          <div class="chapter-title">Visual Effects</div>
+          <div class="chapter-duration">9:15 mins</div>
+        </div>
+      </div>
+      <div class="chapter" data-time="240">
+        <div class="chapter-icon">5</div>
+        <div class="chapter-content">
+          <div class="chapter-title">Performance & Optimization</div>
+          <div class="chapter-duration">7:10 mins</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Video Section -->
+    <div class="video-section">
+      <div class="video-header">
+        <div class="video-title">🎥 Tutorial Video</div>
+        <div class="video-controls">
+          <button class="control-btn" id="fullscreenBtn">⛶</button>
+          <button class="control-btn" id="settingsBtn">⚙</button>
+        </div>
+      </div>
+      
+      <div class="video-wrapper">
+        <video controls style="width: 100%; border-radius: 16px;">
+          <source src="your-video-name.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      
+      <div class="video-info">
+        <div class="info-card">
+          <span class="info-value" id="duration">42:30</span>
+          <span class="info-label">Duration</span>
+        </div>
+        <div class="info-card">
+          <span class="info-value" id="progress">0%</span>
+          <span class="info-label">Progress</span>
+        </div>
+        <div class="info-card">
+          <span class="info-value" id="quality">4K</span>
+          <span class="info-label">Quality</span>
+        </div>
+        <div class="info-card">
+          <span class="info-value" id="rating">4.9★</span>
+          <span class="info-label">Rating</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section" id="features">
+    <div class="section-header">
+      <h2 class="section-title">Premium Features</h2>
+      <p style="color: var(--text-secondary); font-size: 1.2rem;">Experience the future of interactive design</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <div class="feature-title">Dynamic Hexagon Patterns</div>
+        <p style="color: var(--text-secondary);">Interactive hexagonal grids that respond to mouse movement with stunning visual effects and smooth animations.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Performance Optimized</div>
+        <p style="color: var(--text-secondary);">Smooth 60fps animations with GPU acceleration and efficient rendering for premium user experience.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎭</div>
+        <div class="feature-title">Glassmorphism Design</div>
+        <p style="color: var(--text-secondary);">Modern glass-like interface elements with backdrop blur effects and sophisticated color schemes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">Interactive Navigation</div>
+        <p style="color: var(--text-secondary);">Seamless chapter navigation with active states and smooth transitions between content sections.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌈</div>
+        <div class="feature-title">Multi-Color Themes</div>
+        <p style="color: var(--text-secondary);">Rich color palette with gold, cyan, purple, and pink accents for vibrant visual appeal.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <div class="feature-title">Responsive Design</div>
+        <p style="color: var(--text-secondary);">Fully responsive layout that adapts beautifully to all screen sizes and devices.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Settings Panel -->
+  <button class="settings-toggle" id="settingsToggle">⚙</button>
+  <div class="settings-panel" id="settingsPanel">
+    <h3 style="margin-bottom: 1rem; color: var(--accent-gold);">Visual Settings</h3>
+    <div class="setting-item">
+      <label class="setting-label">Hex Density</label>
+      <input type="range" class="setting-range" id="densityRange" min="20" max="100" value="50">
+    </div>
+    <div class="setting-item">
+      <label class="setting-label">Animation Speed</label>
+      <input type="range" class="setting-range" id="speedRange" min="0.5" max="3" step="0.1" value="1">
+    </div>
+    <div class="setting-item">
+      <label class="setting-label">Glow Intensity</label>
+      <input type="range" class="setting-range" id="glowRange" min="0.1" max="2" step="0.1" value="1">
+    </div>
+  </div>
+
+  <!-- Hex Canvas -->
+  <canvas id="hexCanvas"></canvas>
+
+  <script>
+    // Loading screen
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('hidden');
+      }, 2000);
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('.nav-item, .btn').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
+
+    // Chapter navigation with enhanced features
+    let currentChapter = 0;
+    const chapters = document.querySelectorAll('.chapter');
+    const progressBar = document.getElementById('progress');
+    
+    chapters.forEach((chapter, index) => {
+      chapter.addEventListener('click', () => {
+        // Remove active class from all chapters
+        chapters.forEach(ch => ch.classList.remove('active'));
+        // Add active class to clicked chapter
+        chapter.classList.add('active');
+        
+        currentChapter = index;
+        updateProgress();
+        
+        // Simulate video time jump
+        const time = parseInt(chapter.dataset.time);
+        animateProgressUpdate(time);
+        
+        // Add click animation
+        chapter.style.transform = 'translateX(10px) scale(0.98)';
+        setTimeout(() => {
+          chapter.style.transform = '';
+        }, 150);
+      });
+    });
+
+    function updateProgress() {
+      const progress = Math.round((currentChapter / (chapters.length - 1)) * 100);
+      progressBar.textContent = `${progress}%`;
+    }
+
+    function animateProgressUpdate(time) {
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      const duration = document.getElementById('duration');
+      duration.style.transform = 'scale(1.2)';
+      duration.style.color = 'var(--accent-cyan)';
+      setTimeout(() => {
+        duration.style.transform = '';
+        duration.style.color = '';
+      }, 300);
+    }
+
+    // Enhanced hexagon canvas with multiple effects
+    const canvas = document.getElementById('hexCanvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, animationId;
+    let hexSettings = {
+      count: 50,
+      speed: 5,
+      glowIntensity: 1
+    };
+    
+    const hexagons = [];
+    const particles = [];
+    const connections = [];
+    
+    // Mouse tracking with smooth interpolation
+    const mouse = { x: 0, y: 0, targetX: 0, targetY: 0, speed: 0 };
+    const lastMouse = { x: 0, y: 0 };
+    
+    // Color palette for dynamic effects
+    const colors = [
+      'rgba(255, 215, 0, 0.6)',   // Gold
+      'rgba(0, 229, 255, 0.6)',   // Cyan
+      'rgba(139, 92, 246, 0.6)',  // Purple
+      'rgba(255, 0, 110, 0.6)',   // Pink
+      'rgba(0, 255, 135, 0.6)'    // Green
+    ];
+
+    class Hexagon {
+      constructor(x, y, size, color) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.originalSize = size;
+        this.color = color;
+        this.rotation = Math.random() * Math.PI * 2;
+        this.rotationSpeed = (Math.random() - 0.5) * 0.02;
+        this.pulsePhase = Math.random() * Math.PI * 2;
+        this.glowIntensity = 0;
+        this.targetGlow = 0;
+      }
+      
+      update() {
+        this.rotation += this.rotationSpeed * hexSettings.speed;
+        this.pulsePhase += 0.03 * hexSettings.speed;
+        
+        // Distance-based glow effect
+        const dist = Math.hypot(mouse.x - this.x, mouse.y - this.y);
+        const maxDist = 200;
+        this.targetGlow = dist < maxDist ? (1 - dist / maxDist) * hexSettings.glowIntensity : 0;
+        this.glowIntensity += (this.targetGlow - this.glowIntensity) * 0.1;
+        
+        // Pulse effect
+        const pulse = Math.sin(this.pulsePhase) * 0.1 + 1;
+        this.size = this.originalSize * pulse;
+      }
+      
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        
+        // Draw hexagon
+        const vertices = [];
+        for (let i = 0; i < 6; i++) {
+          const angle = Math.PI / 3 * i;
+          vertices.push({
+            x: Math.cos(angle) * this.size,
+            y: Math.sin(angle) * this.size
+          });
+        }
+        
+        // Base outline
+        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 + this.glowIntensity * 0.3})`;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        vertices.forEach((vertex, i) => {
+          if (i === 0) ctx.moveTo(vertex.x, vertex.y);
+          else ctx.lineTo(vertex.x, vertex.y);
+        });
+        ctx.closePath();
+        ctx.stroke();
+        
+        // Glow effect
+        if (this.glowIntensity > 0.1) {
+          ctx.shadowColor = this.color;
+          ctx.shadowBlur = 20 * this.glowIntensity;
+          ctx.strokeStyle = this.color;
+          ctx.lineWidth = 2 + this.glowIntensity * 3;
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+        
+        // Inner glow
+        if (this.glowIntensity > 0.3) {
+          ctx.fillStyle = `rgba(${this.color.match(/\d+/g).slice(0,3).join(',')}, ${this.glowIntensity * 0.1})`;
+          ctx.fill();
+        }
+        
+        ctx.restore();
+      }
+    }
+
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 2;
+        this.vy = (Math.random() - 0.5) * 2;
+        this.life = 1;
+        this.decay = 0.02;
+        this.size = Math.random() * 3 + 1;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+      
+      update() {
+        this.x += this.vx * hexSettings.speed;
+        this.y += this.vy * hexSettings.speed;
+        this.life -= this.decay;
+        this.size *= 0.99;
+      }
+      
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.life;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function initHexagons() {
+      hexagons.length = 0;
+      const clusters = 3;
+      
+      for (let cluster = 0; cluster < clusters; cluster++) {
+        const centerX = (W / clusters) * cluster + W / (clusters * 2);
+        const centerY = H / 2 + (Math.random() - 0.5) * H * 0.4;
+        const clusterRadius = Math.min(W, H) * 0.15;
+        const hexCount = Math.floor(hexSettings.count / clusters);
+        
+        for (let i = 0; i < hexCount; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const radius = Math.sqrt(Math.random()) * clusterRadius;
+          const x = centerX + Math.cos(angle) * radius;
+          const y = centerY + Math.sin(angle) * radius;
+          const size = 20 + Math.random() * 40;
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          
+          hexagons.push(new Hexagon(x, y, size, color));
+        }
+      }
+    }
+
+    function createParticles(x, y, count = 5) {
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle(x, y));
+      }
+    }
+
+    function updateMouse() {
+      mouse.x += (mouse.targetX - mouse.x) * 0.1;
+      mouse.y += (mouse.targetY - mouse.y) * 0.1;
+      mouse.speed = Math.hypot(mouse.x - lastMouse.x, mouse.y - lastMouse.y);
+      lastMouse.x = mouse.x;
+      lastMouse.y = mouse.y;
+      
+      // Create particles on fast movement
+      if (mouse.speed > 5) {
+        createParticles(mouse.x, mouse.y, Math.floor(mouse.speed / 10));
+      }
+    }
+
+    function drawConnections() {
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.lineWidth = 1;
+      
+      for (let i = 0; i < hexagons.length; i++) {
+        for (let j = i + 1; j < hexagons.length; j++) {
+          const hex1 = hexagons[i];
+          const hex2 = hexagons[j];
+          const dist = Math.hypot(hex1.x - hex2.x, hex1.y - hex2.y);
+          
+          if (dist < 150) {
+            const alpha = (150 - dist) / 150 * 0.2;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(hex1.x, hex1.y);
+            ctx.lineTo(hex2.x, hex2.y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, W, H);
+      
+      updateMouse();
+      
+      // Draw connections
+      drawConnections();
+      
+      // Update and draw hexagons
+      hexagons.forEach(hex => {
+        hex.update();
+        hex.draw();
+      });
+      
+      // Update and draw particles
+      particles.forEach((particle, index) => {
+        particle.update();
+        particle.draw();
+        
+        if (particle.life <= 0) {
+          particles.splice(index, 1);
+        }
+      });
+      
+      // Mouse trail effect
+      if (mouse.speed > 2) {
+        ctx.save();
+        ctx.globalAlpha = Math.min(mouse.speed / 20, 0.5);
+        const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 50);
+        gradient.addColorStop(0, 'rgba(0, 229, 255, 0.3)');
+        gradient.addColorStop(1, 'rgba(0, 229, 255, 0)');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 50, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      
+      animationId = requestAnimationFrame(animate);
+    }
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      initHexagons();
+    }
+
+    // Event listeners
+    canvas.addEventListener('mousemove', (e) => {
+      mouse.targetX = e.clientX;
+      mouse.targetY = e.clientY;
+    });
+
+    canvas.addEventListener('click', (e) => {
+      createParticles(e.clientX, e.clientY, 10);
+    });
+
+    window.addEventListener('resize', resize);
+
+    // Settings panel functionality
+    const settingsToggle = document.getElementById('settingsToggle');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const densityRange = document.getElementById('densityRange');
+    const speedRange = document.getElementById('speedRange');
+    const glowRange = document.getElementById('glowRange');
+
+    settingsToggle.addEventListener('click', () => {
+      settingsPanel.classList.toggle('active');
+    });
+
+    densityRange.addEventListener('input', (e) => {
+      hexSettings.count = parseInt(e.target.value);
+      initHexagons();
+    });
+
+    speedRange.addEventListener('input', (e) => {
+      hexSettings.speed = parseFloat(e.target.value);
+    });
+
+    glowRange.addEventListener('input', (e) => {
+      hexSettings.glowIntensity = parseFloat(e.target.value);
+    });
+
+    // Video placeholder interactions
+    const playBtn = document.getElementById('playBtn');
+    const videoPlaceholder = document.getElementById('videoPlaceholder');
+
+    // Intersection Observer for animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe feature cards
+    document.querySelectorAll('.feature-card').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(card);
+    });
+
+    // Initialize everything
+    resize();
+    animate();
+
+    // Performance monitoring
+    let frameCount = 0;
+    let lastTime = performance.now();
+    
+    setInterval(() => {
+      const currentTime = performance.now();
+      const fps = Math.round(frameCount * 1000 / (currentTime - lastTime));
+      frameCount = 0;
+      lastTime = currentTime;
+      
+      // Adjust quality based on performance
+      if (fps < 30 && hexSettings.count > 30) {
+        hexSettings.count = Math.max(20, hexSettings.count - 5);
+        initHexagons();
+      }
+    }, 1000);
+
+    // Count frames
+    const originalAnimate = animate;
+    animate = function() {
+      frameCount++;
+      originalAnimate();
+    };
+  </script>
+</body>
+</html>
