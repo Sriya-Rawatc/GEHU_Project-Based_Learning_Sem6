@@ -690,10 +690,11 @@
     <div class="nav-content">
       <div class="logo">CodeBrain</div>
       <div class="nav-menu">
+        <a href="#pageFrame" class="nav-item">About</a>
         <a href="#home" class="nav-item">Home</a>
         <a href="#features" class="nav-item">Features</a>
         <a href="#tutorials" class="nav-item">Tutorials</a>
-        <a href="#contact" class="nav-item">Contact</a>
+        <a href="#footer-modern" class="nav-item">Contact</a>
       </div>
     </div>
   </nav>
@@ -1541,6 +1542,196 @@
 
   <!-- Hex Canvas -->
   <canvas id="hexCanvas"></canvas>
+
+  <div id="footer-modern" style="background:#0f1226; color:#eee; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width:100%; padding:12px 20px; box-sizing:border-box;">
+    <style>
+      #footer-modern {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 40px;
+        min-height: 110px;
+        position: relative;
+        user-select: none;
+      }
+
+      .member {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        cursor: default;
+        max-width: 140px;
+        text-align: center;
+      }
+
+      .center {
+        order: 0;
+        flex-grow: 1;
+      }
+
+      .name {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #f0a7c0; /* pink */
+        margin-bottom: 4px;
+        position: relative;
+      }
+      .role {
+        font-size: 0.9rem;
+        color: #bbb;
+        margin-bottom: 8px;
+        font-style: italic;
+      }
+
+      ul.socials {
+        list-style: none;
+        display: flex;
+        gap: 14px;
+        padding: 0;
+        margin: 0;
+        justify-content: center;
+      }
+      ul.socials li a {
+        display: inline-flex;
+        width: 24px;
+        height: 24px;
+        transition: transform 0.3s ease, filter 0.3s ease;
+        filter: drop-shadow(0 0 1px rgba(0,0,0,0.2));
+      }
+      ul.socials li a:hover {
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 4px #fff);
+      }
+
+      /* Icon colors */
+      a.instagram svg { fill: #e4405f; }
+      a.linkedin svg { fill: #0077b5; }
+      a.github svg { fill: #8a3ab9; }
+      a.email svg { fill: #d14836; }
+
+      /* Image popup */
+      .img-popup {
+        position: absolute;
+        bottom: 140%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 140px;
+        height: 140px;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+        border: 3px solid #f0a7c0;
+        background: #1c1f3a;
+        z-index: 10;
+      }
+      .img-popup img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* Show popup on hover */
+      .member:hover .img-popup {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* Responsive */
+      @media (max-width: 720px) {
+        #footer-modern {
+          flex-direction: column;
+          gap: 25px;
+          min-height: auto;
+          padding: 20px 10px;
+        }
+        .member {
+          max-width: 200px;
+        }
+        .img-popup {
+          bottom: 160%;
+          width: 160px;
+          height: 160px;
+        }
+      }
+    </style>
+
+    <div class="member" aria-label="Contact details for Prakriti Kimothi">
+      <div class="name" tabindex="0">Prakriti Kimothi
+        <div class="img-popup" aria-hidden="true">
+          <img src="/Operating System/documentation assests/images/Prakriti.jpg" alt="Prakriti Kimothi" />
+        </div>
+      </div>
+      <div class="role">Front-End & UI/UX Developer</div>
+      <ul class="socials">
+        <li><a href="#" target="_blank" rel="noopener noreferrer" class="instagram" aria-label="Prakriti Instagram">
+          <svg viewBox="0 0 24 24"><path d="M7.75 2A5.75 5.75 0 0 0 2 7.75v8.5A5.75 5.75 0 0 0 7.75 22h8.5A5.75 5.75 0 0 0 22 16.25v-8.5A5.75 5.75 0 0 0 16.25 2h-8.5zm0 2h8.5A3.75 3.75 0 0 1 20 7.75v8.5a3.75 3.75 0 0 1-3.75 3.75h-8.5A3.75 3.75 0 0 1 4 16.25v-8.5A3.75 3.75 0 0 1 7.75 4zm8.75 1.75a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>
+        </a></li>
+        <li><a href="#" target="_blank" rel="noopener noreferrer" class="linkedin" aria-label="Prakriti LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M4.98 3.5C3.34 3.5 2 4.84 2 6.5c0 1.65 1.34 3 2.98 3s2.98-1.35 2.98-3c0-1.66-1.34-3-2.98-3zM2 8.79h6v11.21h-6V8.79zM9.5 8.79h5.4v1.5h.1c.75-1.36 2.57-2.79 5.3-2.79 5.68 0 6.73 3.73 6.73 8.58v9.15h-6v-8.1c0-1.93-.04-4.42-2.7-4.42-2.7 0-3.11 2.11-3.11 4.29v8.23h-6V8.79z"/></svg>
+        </a></li>
+        <li><a href="#" target="_blank" rel="noopener noreferrer" class="github" aria-label="Prakriti GitHub">
+          <svg viewBox="0 0 24 24"><path d="M12 0a12 12 0 0 0-3.8 23.39c.6.11.82-.26.82-.58 0-.29-.01-1.05-.02-2.06-3.34.73-4.04-1.6-4.04-1.6a3.18 3.18 0 0 0-1.34-1.77c-1.09-.75.08-.74.08-.74a2.51 2.51 0 0 1 1.83 1.23 2.56 2.56 0 0 0 3.5 1 2.56 2.56 0 0 1 .76-1.6c-2.67-.3-5.47-1.33-5.47-5.93a4.64 4.64 0 0 1 1.23-3.21 4.3 4.3 0 0 1 .12-3.17s1-.32 3.3 1.23a11.47 11.47 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23a4.3 4.3 0 0 1 .12 3.17 4.64 4.64 0 0 1 1.23 3.21c0 4.61-2.8 5.63-5.47 5.93a2.87 2.87 0 0 1 .82 2.23c0 1.6-.02 2.88-.02 3.28 0 .32.22.7.82.58A12 12 0 0 0 12 0z"/></svg>
+        </a></li>
+        <li><a href="mailto:prakriti@example.com" class="email" aria-label="Email Prakriti">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18v-9l8 6 8-6v9H4z"/></svg>
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="member center" aria-label="Contact details for Pranjal Sailwal">
+      <div class="name" tabindex="0">Pranjal Sailwal
+        <div class="img-popup" aria-hidden="true">
+          <img src="/Operating System/documentation assests/images/Pranjal.png" alt="Pranjal Sailwal" />
+        </div>
+      </div>
+      <div class="role">Team Lead</div>
+      <ul class="socials">
+        <li><a href="https://www.instagram.com/pranjal_sailwal/" target="_blank" rel="noopener noreferrer" class="instagram" aria-label="Pranjal Instagram">
+          <svg viewBox="0 0 24 24"><path d="M7.75 2A5.75 5.75 0 0 0 2 7.75v8.5A5.75 5.75 0 0 0 7.75 22h8.5A5.75 5.75 0 0 0 22 16.25v-8.5A5.75 5.75 0 0 0 16.25 2h-8.5zm0 2h8.5A3.75 3.75 0 0 1 20 7.75v8.5a3.75 3.75 0 0 1-3.75 3.75h-8.5A3.75 3.75 0 0 1 4 16.25v-8.5A3.75 3.75 0 0 1 7.75 4zm8.75 1.75a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>
+        </a></li>
+        <li><a href="https://www.linkedin.com/in/pranjal-sailwal/" target="_blank" rel="noopener noreferrer" class="linkedin" aria-label="Pranjal LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M4.98 3.5C3.34 3.5 2 4.84 2 6.5c0 1.65 1.34 3 2.98 3s2.98-1.35 2.98-3c0-1.66-1.34-3-2.98-3zM2 8.79h6v11.21h-6V8.79zM9.5 8.79h5.4v1.5h.1c.75-1.36 2.57-2.79 5.3-2.79 5.68 0 6.73 3.73 6.73 8.58v9.15h-6v-8.1c0-1.93-.04-4.42-2.7-4.42-2.7 0-3.11 2.11-3.11 4.29v8.23h-6V8.79z"/></svg>
+        </a></li>
+        <li><a href="https://github.com/sailwalpranjal" target="_blank" rel="noopener noreferrer" class="github" aria-label="Pranjal GitHub">
+          <svg viewBox="0 0 24 24"><path d="M12 0a12 12 0 0 0-3.8 23.39c.6.11.82-.26.82-.58 0-.29-.01-1.05-.02-2.06-3.34.73-4.04-1.6-4.04-1.6a3.18 3.18 0 0 0-1.34-1.77c-1.09-.75.08-.74.08-.74a2.51 2.51 0 0 1 1.83 1.23 2.56 2.56 0 0 0 3.5 1 2.56 2.56 0 0 1 .76-1.6c-2.67-.3-5.47-1.33-5.47-5.93a4.64 4.64 0 0 1 1.23-3.21 4.3 4.3 0 0 1 .12-3.17s1-.32 3.3 1.23a11.47 11.47 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23a4.3 4.3 0 0 1 .12 3.17 4.64 4.64 0 0 1 1.23 3.21c0 4.61-2.8 5.63-5.47 5.93a2.87 2.87 0 0 1 .82 2.23c0 1.6-.02 2.88-.02 3.28 0 .32.22.7.82.58A12 12 0 0 0 12 0z"/></svg>
+        </a></li>
+        <li><a href="mailto:pranjalsailwal09@gmail.com" class="email" aria-label="Email Pranjal">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18v-9l8 6 8-6v9H4z"/></svg>
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="member" aria-label="Contact details for Sriya Rawat">
+      <div class="name" tabindex="0">Sriya Rawat
+        <div class="img-popup" aria-hidden="true">
+          <img src="/Operating System/documentation assests/images/Sriya.jpg" alt="Sriya Rawat" />
+        </div>
+      </div>
+      <div class="role">UI/UX Designer</div>
+      <ul class="socials">
+        <li><a href="#" target="_blank" rel="noopener noreferrer" class="instagram" aria-label="Sriya Instagram">
+          <svg viewBox="0 0 24 24"><path d="M7.75 2A5.75 5.75 0 0 0 2 7.75v8.5A5.75 5.75 0 0 0 7.75 22h8.5A5.75 5.75 0 0 0 22 16.25v-8.5A5.75 5.75 0 0 0 16.25 2h-8.5zm0 2h8.5A3.75 3.75 0 0 1 20 7.75v8.5a3.75 3.75 0 0 1-3.75 3.75h-8.5A3.75 3.75 0 0 1 4 16.25v-8.5A3.75 3.75 0 0 1 7.75 4zm8.75 1.75a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>
+        </a></li>
+        <li><a href="#" target="_blank" rel="noopener noreferrer" class="linkedin" aria-label="Sriya LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M4.98 3.5C3.34 3.5 2 4.84 2 6.5c0 1.65 1.34 3 2.98 3s2.98-1.35 2.98-3c0-1.66-1.34-3-2.98-3zM2 8.79h6v11.21h-6V8.79zM9.5 8.79h5.4v1.5h.1c.75-1.36 2.57-2.79 5.3-2.79 5.68 0 6.73 3.73 6.73 8.58v9.15h-6v-8.1c0-1.93-.04-4.42-2.7-4.42-2.7 0-3.11 2.11-3.11 4.29v8.23h-6V8.79z"/></svg>
+        </a></li>
+        <li><a href="#" target="_blank" rel="noopener noreferrer" class="github" aria-label="Sriya GitHub">
+          <svg viewBox="0 0 24 24"><path d="M12 0a12 12 0 0 0-3.8 23.39c.6.11.82-.26.82-.58 0-.29-.01-1.05-.02-2.06-3.34.73-4.04-1.6-4.04-1.6a3.18 3.18 0 0 0-1.34-1.77c-1.09-.75.08-.74.08-.74a2.51 2.51 0 0 1 1.83 1.23 2.56 2.56 0 0 0 3.5 1 2.56 2.56 0 0 1 .76-1.6c-2.67-.3-5.47-1.33-5.47-5.93a4.64 4.64 0 0 1 1.23-3.21 4.3 4.3 0 0 1 .12-3.17s1-.32 3.3 1.23a11.47 11.47 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23a4.3 4.3 0 0 1 .12 3.17 4.64 4.64 0 0 1 1.23 3.21c0 4.61-2.8 5.63-5.47 5.93a2.87 2.87 0 0 1 .82 2.23c0 1.6-.02 2.88-.02 3.28 0 .32.22.7.82.58A12 12 0 0 0 12 0z"/></svg>
+        </a></li>
+        <li><a href="mailto:sriya@example.com" class="email" aria-label="Email Sriya">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18v-9l8 6 8-6v9H4z"/></svg>
+        </a></li>
+      </ul>
+    </div>
+  </div>
+
+
 
   <script>
     // Loading screen
