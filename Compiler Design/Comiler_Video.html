@@ -257,7 +257,8 @@
       border: 1px solid var(--glass-border);
       border-radius: 20px;
       padding: 2rem;
-      height: fit-content;
+      max-height: 600px;
+      overflow-y: auto;
       position: sticky;
       top: 120px;
       box-shadow: var(--shadow-premium);
@@ -558,7 +559,7 @@
       width: 60px;
       height: 60px;
       border-radius: 16px;
-      background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+      background: linear-gradient(135deg, #ac10ac, #362fae);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1364,7 +1365,7 @@
         <div class="chapter-icon">1</div>
         <div class="chapter-content">
           <div class="chapter-title">Introduction to Hex</div>
-          <div class="chapter-duration">5:30 mins</div>
+          <div class="chapter-duration">00:30 mins</div>
         </div>
       </div>
       <div class="chapter" data-time="60">
@@ -1395,25 +1396,74 @@
           <div class="chapter-duration">7:10 mins</div>
         </div>
       </div>
+
+            <div class="chapter" data-time="240">
+        <div class="chapter-icon">5</div>
+        <div class="chapter-content">
+          <div class="chapter-title">Performance & Optimization</div>
+          <div class="chapter-duration">7:10 mins</div>
+        </div>
+      </div>
+            <div class="chapter" data-time="240">
+        <div class="chapter-icon">5</div>
+        <div class="chapter-content">
+          <div class="chapter-title">Performance & Optimization</div>
+          <div class="chapter-duration">7:10 mins</div>
+        </div>
+      </div>
+            <div class="chapter" data-time="240">
+        <div class="chapter-icon">5</div>
+        <div class="chapter-content">
+          <div class="chapter-title">Performance & Optimization</div>
+          <div class="chapter-duration">7:10 mins</div>
+        </div>
+      </div>
+            <div class="chapter" data-time="240">
+        <div class="chapter-icon">5</div>
+        <div class="chapter-content">
+          <div class="chapter-title">Performance & Optimization</div>
+          <div class="chapter-duration">7:10 mins</div>
+        </div>
+      </div>
     </div>
 
     <!-- Enhanced Video Section -->
     <div class="video-section">
       <div class="video-header">
-        <div class="video-title">🎥 Tutorial Video</div>
-        <div class="video-controls">
-          <button class="control-btn" id="fullscreenBtn">⛶</button>
-          <button class="control-btn" id="settingsBtn">⚙</button>
-        </div>
+        <div class="video-title">Documentation Video</div>
       </div>
       
-      <div class="video-wrapper">
-        <video controls style="width: 100%; border-radius: 16px;">
-          <source src="your-video-name.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
+    <div class="video-wrapper" style="position: relative;">
+      <!-- Popup inside the video wrapper -->
+      <div id="videoPopup" style="
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.85);
+        color: white;
+        padding: 0.8rem 1.2rem;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+        z-index: 999;
+      ">
+        🎬 This is the video explanation — don’t forget to unmute!
       </div>
-      
+
+      <!-- Video iframe -->
+      <iframe 
+        src="https://drive.google.com/file/d/1jFc50_rFHXA7QZjzysKrfUzEoenurxvH/preview" 
+        width="100%" 
+        height="400" 
+        style="border-radius: 16px; border: none;"
+        allow="autoplay">
+      </iframe>
+    </div>
+
       <div class="video-info">
         <div class="info-card">
           <span class="info-value" id="duration">42:30</span>
@@ -1438,39 +1488,56 @@
   <!-- Features Section -->
   <section class="features-section" id="features">
     <div class="section-header">
-      <h2 class="section-title">Premium Features</h2>
-      <p style="color: var(--text-secondary); font-size: 1.2rem;">Experience the future of interactive design</p>
+      <h2 class="section-title">What We’re Most Proud Of</h2>
+      <p style="color: var(--text-secondary); font-size: 1.2rem;">A look at the features and moments that made building this project especially meaningful for our team.</p>
     </div>
     <div class="features-grid">
       <div class="feature-card">
-        <div class="feature-icon">🎨</div>
-        <div class="feature-title">Dynamic Hexagon Patterns</div>
-        <p style="color: var(--text-secondary);">Interactive hexagonal grids that respond to mouse movement with stunning visual effects and smooth animations.</p>
+        <div class="feature-icon">🤝</div>
+        <div class="feature-title">Real-Time Collaboration</div>
+        <p style="color: var(--text-secondary);">
+          Multiple users can edit code simultaneously with instant updates using WebSockets and Socket.io.
+        </p>
       </div>
+
       <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <div class="feature-title">Performance Optimized</div>
-        <p style="color: var(--text-secondary);">Smooth 60fps animations with GPU acceleration and efficient rendering for premium user experience.</p>
+        <div class="feature-icon">💬</div>
+        <div class="feature-title">Integrated Chat System</div>
+        <p style="color: var(--text-secondary);">
+          Collaborators can communicate directly inside the editor through a built-in chat feature and live presence indicators.
+        </p>
       </div>
+
       <div class="feature-card">
-        <div class="feature-icon">🎭</div>
-        <div class="feature-title">Glassmorphism Design</div>
-        <p style="color: var(--text-secondary);">Modern glass-like interface elements with backdrop blur effects and sophisticated color schemes.</p>
+        <div class="feature-icon">⚙️</div>
+        <div class="feature-title">Live Code Execution</div>
+        <p style="color: var(--text-secondary);">
+          Run and test code in real time within the editor, helping teams debug collaboratively and efficiently.
+        </p>
       </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <div class="feature-title">Secure Collaboration</div>
+        <p style="color: var(--text-secondary);">
+          Encrypted sessions, access control, and isolated environments ensure user data and code are safe and private.
+        </p>
+      </div>
+
       <div class="feature-card">
         <div class="feature-icon">🎯</div>
-        <div class="feature-title">Interactive Navigation</div>
-        <p style="color: var(--text-secondary);">Seamless chapter navigation with active states and smooth transitions between content sections.</p>
+        <div class="feature-title">Multi-File Project Management</div>
+        <p style="color: var(--text-secondary);">
+          Collaborate on full-stack projects with multi-file support and organized workspace handling.
+        </p>
       </div>
+
       <div class="feature-card">
-        <div class="feature-icon">🌈</div>
-        <div class="feature-title">Multi-Color Themes</div>
-        <p style="color: var(--text-secondary);">Rich color palette with gold, cyan, purple, and pink accents for vibrant visual appeal.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📱</div>
-        <div class="feature-title">Responsive Design</div>
-        <p style="color: var(--text-secondary);">Fully responsive layout that adapts beautifully to all screen sizes and devices.</p>
+        <div class="feature-icon">🎨</div>
+        <div class="feature-title">Customizable UI</div>
+        <p style="color: var(--text-secondary);">
+          Switch themes, adjust layouts, and personalize the interface for an optimized coding experience.
+        </p>
       </div>
     </div>
   </section>
@@ -1579,7 +1646,7 @@
     let hexSettings = {
       count: 50,
       speed: 5,
-      glowIntensity: 1
+      glowIntensity: 10
     };
     
     const hexagons = [];
@@ -1645,7 +1712,7 @@
         
         // Base outline
         ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 + this.glowIntensity * 0.3})`;
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 2.5;
         ctx.beginPath();
         vertices.forEach((vertex, i) => {
           if (i === 0) ctx.moveTo(vertex.x, vertex.y);
@@ -1706,7 +1773,7 @@
 
     function initHexagons() {
       hexagons.length = 0;
-      const clusters = 3;
+      const clusters = 50;
       
       for (let cluster = 0; cluster < clusters; cluster++) {
         const centerX = (W / clusters) * cluster + W / (clusters * 2);
