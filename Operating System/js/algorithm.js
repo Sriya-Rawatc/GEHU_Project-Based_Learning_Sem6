@@ -696,7 +696,7 @@ async function roundRobin(flag1) {
     readyQueueInit();
     let timeQuanta = Number($("#time_quanta").val());
     if (timeQuanta == 0)
-        timeQuanta = 90;
+        timeQuanta = 2;
     let time = 0;
     let processQueue = [];
     let min, p, j, flag;
